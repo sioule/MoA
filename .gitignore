@@ -1,0 +1,10 @@
+# Node.js
+client/node_modules
+client/build
+
+
+# Python
+server/__pycache__/
+server/venv/
+server/.env
+server/*.pyc
