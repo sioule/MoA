@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './templates/Login';
-import Register from './templates/Register';
+import Login from './templates/login/Login';
+import Register from './templates/register/Register';
 import Menu from './components/menu/menu';
-import YearlyStats from './templates/YearlyStats';
-import Statistics from './templates/Statistics';
+import YearlyStats from './templates/goal/YearlyStats';
+import Statistics from './templates/statistics/Statistics';
 import './App.css';
 
 function App() {

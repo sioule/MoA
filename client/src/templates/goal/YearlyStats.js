@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../components/YearlyStats.css';
+import './YearlyStats.css';
 
 const YearlyStats = () => {
   const [selectedYear] = useState(2025);
