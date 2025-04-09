@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './templates/login/Login';
 import Register from './templates/register/Register';
@@ -7,12 +8,16 @@ import Statistics from './templates/statistics/Statistics';
 import './App.css';
 
 function App() {
-  const isLoggedIn = true;
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
 
   return (
     <Router>
       <div className="App">
-        {isLoggedIn && <Menu />}
+        {isLoggedIn && <Menu onLogout={handleLogout} />}
         <div className={`content ${isLoggedIn ? 'with-menu' : ''}`}>
           <Routes>
             <Route path="/" element={

@@ -40,41 +40,48 @@ const Login = () => {
 
       {/* 오른쪽 로그인 폼 영역 */}
       <div className="login-section">
-        <h2>모아 로그인</h2>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="text"
-              id="id"
-              name="id"
-              placeholder="ID"
-              value={formData.id}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <div className="login-content">
+          <img 
+            src={process.env.PUBLIC_URL + '/images/moa-logo-b.png'} 
+            alt="MoA Logo" 
+            className="login-logo" 
+          />
+          <h2>로그인</h2>
+          <form className="login-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                type="text"
+                id="id"
+                name="id"
+                placeholder="ID"
+                value={formData.id}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="PW"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="form-group">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="PW"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <button type="submit" className="login-button">로그인</button>
-          <button 
-            type="button" 
-            className="register-button"
-            onClick={handleRegisterClick}
-          >
-            회원가입
-          </button>
-        </form>
+            <button type="submit" className="login-button">로그인</button>
+            <button 
+              type="button" 
+              className="register-button"
+              onClick={handleRegisterClick}
+            >
+              회원가입
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

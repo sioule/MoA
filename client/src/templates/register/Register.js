@@ -39,49 +39,56 @@ const Register = () => {
 
       {/* 오른쪽 회원가입 폼 영역 */}
       <div className="register-section">
-        <h2>회원가입</h2>
-        <form className="register-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="이메일"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <div className="register-content">
+          <img 
+            src={process.env.PUBLIC_URL + '/images/moa-logo-b.png'} 
+            alt="MoA Logo" 
+            className="register-logo" 
+          />
+          <h2>회원가입</h2>
+          <form className="register-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="이메일"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="비밀번호"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="form-group">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="비밀번호"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              placeholder="닉네임"
-              value={formData.nickname}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="form-group">
+              <input
+                type="text"
+                id="nickname"
+                name="nickname"
+                placeholder="닉네임"
+                value={formData.nickname}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <button type="submit" className="register-submit-button">가입하기</button>
-          <button type="button" className="back-to-login" onClick={() => navigate('/')}>
-            로그인으로 돌아가기
-          </button>
-        </form>
+            <button type="submit" className="register-submit-button">가입하기</button>
+            <button type="button" className="back-to-login" onClick={() => navigate('/')}>
+              로그인으로 돌아가기
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
