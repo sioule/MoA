@@ -66,10 +66,7 @@ const Accounts = () => {
   return (
     <div className="accounts-container">
 
-      <div className="accounts-header">
-        <h2>2025년 3월</h2>
-
-        <div className="profile-section">
+      <div className="profile-section">
         {/* ✅ public/images/moa-fox.png는 이렇게 직접 접근 */}
         <img src="/images/moa-fox.png" alt="MoA Fox" className="profile-image" />
         <div className="level-info">
@@ -78,10 +75,16 @@ const Accounts = () => {
         </div>
       </div>
 
-        <button className="write-button" onClick={handleModalOpen}>
-          작성
-        </button>
+      
+      <div className="accounts-header">
+        <h2>2025년 3월</h2>
       </div>
+
+    <div className="button-wrapper">
+      <button className="write-button" onClick={handleModalOpen}>
+            내역 추가
+        </button>
+    </div>
 
       <div className="transaction-list">
         <div className="transaction-header">

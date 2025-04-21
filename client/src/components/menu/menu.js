@@ -13,7 +13,7 @@ const Menu = ({ onLogout }) => {
     <div className="menu-container">
       <div className="menu-header">
         <img 
-          src={process.env.PUBLIC_URL + '/images/moa-logo-b.png'} 
+          src={process.env.PUBLIC_URL + '/images/moa-logo-w.png'} 
           alt="MoA" 
           className="menu-logo" 
         />
