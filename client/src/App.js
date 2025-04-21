@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './templates/login/login';
+import Login from './templates/login/Login';
 import Register from './templates/register/Register';
 import Menu from './components/menu/menu';
 import Goal from './templates/goal/goal';
