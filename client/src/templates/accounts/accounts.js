@@ -82,7 +82,7 @@ const Accounts = () => {
 
     <div className="button-wrapper">
       <button className="write-button" onClick={handleModalOpen}>
-            내역 추가
+            +
         </button>
     </div>
 
