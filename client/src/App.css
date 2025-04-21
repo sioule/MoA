@@ -1,6 +1,15 @@
 .App {
-  text-align: center;
+  display: flex;
 }
+
+.content {
+  flex: 1;
+  min-height: 100vh;
+}
+
+.content.with-menu {
+  margin-left: 250px;
+
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +44,5 @@
   to {
     transform: rotate(360deg);
   }
+}
 }

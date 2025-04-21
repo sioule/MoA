@@ -1,0 +1,257 @@
+.statistics-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.statistics-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+}
+
+.tab-button {
+  padding: 1rem 2rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #666;
+  position: relative;
+}
+
+.tab-button.active {
+  color: #F8DA00;
+  font-weight: bold;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #F8DA00;
+}
+
+/* 3개월 통계 스타일 */
+.quarterly-stats {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stats-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pie-chart-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.pie-chart {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.pie-segment {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+}
+
+.pie-segment.first {
+  background-color: #F8DA00;
+  transform: rotate(0deg);
+  clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+}
+
+.pie-segment.second {
+  background-color: #FFE763;
+  transform: rotate(calc(360deg * 0.31));
+  clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+}
+
+.pie-segment.third {
+  background-color: #FFF3B8;
+  transform: rotate(calc(360deg * 0.58));
+  clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+}
+
+.pie-segment.expense {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform-origin: 50% 50%;
+  background-color: #ff6b6b;  /* 지출 색상 - 빨간색 */
+}
+
+.percentage-bars {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.percentage-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.month-percentage {
+  width: 60px;
+  text-align: center;
+  font-weight: bold;
+  color: #F8DA00;
+}
+
+.month-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-box {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* 월간 통계 스타일 */
+.monthly-stats {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.monthly-stats .stats-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.monthly-stats .pie-chart-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.monthly-stats .pie-chart {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #F8DA00 0% 70%,  /* 수입 70% */
+    #ff6b6b 70% 100%  /* 지출 30% */
+  );
+}
+
+.monthly-stats .percentage-bars {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.monthly-stats .percentage-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;  /* 간격을 0.5rem으로 줄임 */
+}
+
+.monthly-stats .percentage-bar {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.monthly-stats .percentage {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;  /* 퍼센테이지와 텍스트 사이 간격 */
+}
+
+.monthly-stats .percentage.income {
+  color: #F8DA00;
+}
+
+.monthly-stats .percentage.expense {
+  color: #ff6b6b;
+}
+
+.monthly-stats .total-box {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* 한 달 통계의 텍스트 스타일 */
+.monthly-stats h2 {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.monthly-stats .amount {
+  margin-left: auto;  /* 금액을 오른쪽으로 밀어냄 */
+  font-weight: bold;
+}
+
+.chart-legend {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.legend-color.income {
+  background-color: #F8DA00;
+}
+
+.legend-color.expense {
+  background-color: #ff6b6b;
+} 

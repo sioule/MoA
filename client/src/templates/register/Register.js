@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './login.css';
+import './Register.css';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    id: '',
-    password: ''
+    email: '',
+    password: '',
+    nickname: ''
   });
 
   const handleChange = (e) => {
@@ -19,15 +20,13 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('로그인 시도:', formData);
-  };
-
-  const handleRegisterClick = () => {
-    navigate('/register');
+    console.log('회원가입 시도:', formData);
+    // 회원가입 로직 구현 후 로그인 페이지로 이동
+    // navigate('/');
   };
 
   return (
-    <div className="login-page">
+    <div className="register-page">
       {/* 왼쪽 소개 영역 */}
       <div className="intro-section">
         <h1>가계부를 정리하고</h1>
@@ -38,23 +37,23 @@ const Login = () => {
         </div>
       </div>
 
-      {/* 오른쪽 로그인 폼 영역 */}
-      <div className="login-section">
-        <div className="login-content">
+      {/* 오른쪽 회원가입 폼 영역 */}
+      <div className="register-section">
+        <div className="register-content">
           <img 
             src={process.env.PUBLIC_URL + '/images/moa-logo-b.png'} 
             alt="MoA Logo" 
-            className="login-logo" 
+            className="register-logo" 
           />
-          <h2>로그인</h2>
-          <form className="login-form" onSubmit={handleSubmit}>
+          <h2>회원가입</h2>
+          <form className="register-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <input
-                type="text"
-                id="id"
-                name="id"
-                placeholder="ID"
-                value={formData.id}
+                type="email"
+                id="email"
+                name="email"
+                placeholder="이메일"
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
@@ -65,20 +64,28 @@ const Login = () => {
                 type="password"
                 id="password"
                 name="password"
-                placeholder="PW"
+                placeholder="비밀번호"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <button type="submit" className="login-button">로그인</button>
-            <button 
-              type="button" 
-              className="register-button"
-              onClick={handleRegisterClick}
-            >
-              회원가입
+            <div className="form-group">
+              <input
+                type="text"
+                id="nickname"
+                name="nickname"
+                placeholder="닉네임"
+                value={formData.nickname}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className="register-submit-button">가입하기</button>
+            <button type="button" className="back-to-login" onClick={() => navigate('/')}>
+              로그인으로 돌아가기
             </button>
           </form>
         </div>
@@ -87,4 +94,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Register; 
