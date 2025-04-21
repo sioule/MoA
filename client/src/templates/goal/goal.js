@@ -40,7 +40,7 @@ const Goal = () => {
               type="number"
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
-              placeholder="목표액을 설정해주세요"
+              placeholder="목표액을 입력해주세요"
               className="amount-input"
             />
           </div>
@@ -66,7 +66,7 @@ const Goal = () => {
               <p>목표 금액: {selectedMonthData.목표금액.toLocaleString()}원</p>
               <p>사용 금액: {selectedMonthData.사용금액.toLocaleString()}원</p>
               <p className={`achievement ${!selectedMonthData.달성성공 ? 'failed' : ''}`}>
-                목표 달성 {selectedMonthData.달성성공 ? '성공' : '실패'}
+                달성 {selectedMonthData.달성성공 ? '성공' : '실패'}
               </p>
             </div>
           </div>
@@ -75,7 +75,7 @@ const Goal = () => {
         <div className="month-details">
           <h3>{selectedMonth}월 목표 달성 현황</h3>
           <div className="details-box">
-            <p className="no-data">아직 데이터가 없습니다.</p>
+            <p className="no-data">목표 금액을 설정해주세요!</p>
           </div>
         </div>
       )}

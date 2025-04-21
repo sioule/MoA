@@ -39,13 +39,14 @@
 }
 
 
-
+/*금액 그룹*/
 .target-amount-section {
   display: flex;
   flex-direction: column;
   align-items: center;        /* 세로 가운데 */
   justify-content: center;    /* 가로 가운데 */
   margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .amount-input-container {
@@ -63,12 +64,12 @@
 
 .amount-input {
   padding: 10px;
-  font-size: 18px;
+  font-size: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  width: 200px;
-  padding: 10px 10px 10px 25px; /* 왼쪽에 ₩ 공간 확보 */
-  width: 300px;
+  padding: 10px 10px 10px 30px; /* 왼쪽에 ₩ 공간 확보 */
+  width: 320px;
+  height: 50px;
   background-color: white;    /* 배경색 흰색 */
   border: 1px solid #FFE55C;  /* 테두리 색 변경 */
   
@@ -78,14 +79,14 @@
   top: 50%;
   left: 10px;
   transform: translateY(-50%);
-  font-size: 18px;
+  font-size: 20px;
   color: #333;
 }
 
 
 .amount-input::placeholder {
-  font-size: 14px; /* 원하는 크기로 조절 */
-  color: #aaa;     /* 색상도 원하면 바꿔줘 */
+  font-size: 14px;
+  color: #aaa;    
 }
 
 
@@ -96,10 +97,13 @@
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  width: 300px;
+  width: 320px;
+  font-size: 17px;
 }
 
-/* 기존 정산내역 스타일 유지 */
+
+
+/* 그래프 그룹 */
 .month-details {
   background-color: #fff;
   padding: 2rem;
