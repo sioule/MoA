@@ -48,6 +48,7 @@
 
   .button-wrapper {
     text-align: right;
+    margin-top: 50px;;
   }
 
   
@@ -176,7 +177,7 @@
   }
   
   .modal-buttons button[type="submit"] {
-    background-color: #007bff;
+    background-color: #FFE55C;
     color: white;
   }
   
@@ -188,3 +189,38 @@
   .transaction-header span.active {
     color: #FFE55C;
   }
+
+  /* 달력 스타일 */
+  .calendar-container {
+    position: absolute;
+    top: 100%; /* 부모 요소 기준으로 아래에 위치 */
+    left: 50%; /* 가운데 기준으로 정렬 */
+    transform: translateX(-50%); /* 수평 가운데 정렬 보정 */
+    z-index: 1001;
+    margin-top: 10px;
+  }
+
+  
+  .calendar-month {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .calendar-month:hover {
+    background-color: #e0e0e0;
+  }
+
+  .calendar-month.active {
+    background-color: #FFE55C;
+    color: white;
+  }
+
