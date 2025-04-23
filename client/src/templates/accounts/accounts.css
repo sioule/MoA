@@ -184,3 +184,7 @@
     background-color: #6c757d;
     color: white;
   }
+
+  .transaction-header span.active {
+    color: #FFE55C;
+  }

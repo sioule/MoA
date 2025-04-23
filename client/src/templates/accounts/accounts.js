@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import './accounts.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Calendar from 'react-calendar';
 
 const Accounts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +29,10 @@ const Accounts = () => {
     amount: '',
     type: 'expense'
   });
+
+  const [filter, setFilter] = useState('all');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -63,11 +70,46 @@ const Accounts = () => {
     handleModalClose();
   };
 
+  const handleFilterChange = (type) => {
+    setFilter(type);
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handlePrevMonth = () => {
+    const prevMonth = new Date(selectedDate.setMonth(selectedDate.getMonth() - 1));
+    setSelectedDate(new Date(prevMonth));
+  };
+
+  const handleNextMonth = () => {
+    const nextMonth = new Date(selectedDate.setMonth(selectedDate.getMonth() + 1));
+    setSelectedDate(new Date(nextMonth));
+  };
+
+  const toggleCalendar = () => {
+    setShowCalendar(!showCalendar);
+  };
+
+  const filteredTransactions = transactions.filter(transaction => {
+    if (filter === 'all') return true;
+    return transaction.type === filter;
+  });
+
+  const filteredTransactionsByDate = filteredTransactions.filter(transaction => {
+    const transactionDate = new Date(transaction.date);
+    return (
+      transactionDate.getFullYear() === selectedDate.getFullYear() &&
+      transactionDate.getMonth() === selectedDate.getMonth()
+    );
+  });
+
   return (
     <div className="accounts-container">
 
       <div className="profile-section">
-        {/* ✅ public/images/moa-fox.png는 이렇게 직접 접근 */}
+        {/* public/images/moa-fox.png는 이렇게 직접 접근 */}
         <img src="/images/moa-fox.png" alt="MoA Fox" className="profile-image" />
         <div className="level-info">
           <h2>Lv. 3</h2>
@@ -77,7 +119,21 @@ const Accounts = () => {
 
       
       <div className="accounts-header">
-        <h2>2025년 3월</h2>
+        <button onClick={handlePrevMonth}>&lt;</button>
+        <h2 onClick={toggleCalendar}>
+          {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
+        </h2>
+        <button onClick={handleNextMonth}>&gt;</button>
+        {showCalendar && (
+          <div className="calendar-container">
+            <Calendar
+              onClickMonth={(value) => {
+                setSelectedDate(new Date(value));
+                setShowCalendar(false);
+              }}
+            />
+          </div>
+        )}
       </div>
 
     <div className="button-wrapper">
@@ -88,11 +144,26 @@ const Accounts = () => {
 
       <div className="transaction-list">
         <div className="transaction-header">
-          <span>전체 내역</span>
-          <span>수입</span>
-          <span>지출</span>
+          <span 
+            className={filter === 'all' ? 'active' : ''} 
+            onClick={() => handleFilterChange('all')}
+          >
+            전체 내역
+          </span>
+          <span 
+            className={filter === 'income' ? 'active' : ''} 
+            onClick={() => handleFilterChange('income')}
+          >
+            수입
+          </span>
+          <span 
+            className={filter === 'expense' ? 'active' : ''} 
+            onClick={() => handleFilterChange('expense')}
+          >
+            지출
+          </span>
         </div>
-        {transactions.map(transaction => (
+        {filteredTransactionsByDate.map(transaction => (
           <div key={transaction.id} className="transaction-item">
             <div className="transaction-info">
               <div className="transaction-date">{transaction.date}</div>
