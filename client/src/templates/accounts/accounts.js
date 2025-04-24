@@ -171,23 +171,31 @@ const Accounts = () => {
             지출
           </span>
         </div>
-        {filteredTransactionsByDate.map(transaction => (
-          <div key={transaction.id} className="transaction-item">
-            <div className="transaction-info">
-              <div className="transaction-date">{transaction.date}</div>
-              <div className="transaction-description">{transaction.description}</div>
+  
+        {filteredTransactionsByDate.length > 0 ? (
+          filteredTransactionsByDate.map(transaction => (
+            <div key={transaction.id} className="transaction-item">
+              <div className="transaction-info">
+                <div className="transaction-date">{transaction.date}</div>
+                <div className="transaction-description">{transaction.description}</div>
+              </div>
+              <div className={`transaction-amount ${transaction.amount < 0 ? 'expense' : 'income'}`}>
+                {transaction.amount < 0 ? '-' : '+'} {Math.abs(transaction.amount).toLocaleString()}원
+              </div>
             </div>
-            <div className={`transaction-amount ${transaction.amount < 0 ? 'expense' : 'income'}`}>
-              {transaction.amount < 0 ? '-' : '+'} {Math.abs(transaction.amount).toLocaleString()}원
-            </div>
+          ))
+        ) : (
+          <div className="no-data-message">
+            데이터가 없습니다.
           </div>
-        ))}
+          )}
+
       </div>
 
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>새로운 거래</h3>
+            <h3>거래 내역 작성</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>날짜</label>
@@ -199,7 +207,26 @@ const Accounts = () => {
                   required
                 />
               </div>
-
+              <div className="form-group">
+                <label>설명</label>
+                <input
+                  type="text"
+                  name="description"
+                  value={newTransaction.description}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>금액</label>
+                <input
+                  type="number"
+                  name="amount"
+                  value={newTransaction.amount}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
               <div className="form-group">
                 <label>유형</label>
                 <select
@@ -211,33 +238,9 @@ const Accounts = () => {
                   <option value="income">수입</option>
                 </select>
               </div>
-              
-              <div className="form-group">
-                <label>내용</label>
-                <input
-                  type="text"
-                  name="description"
-                  placeholder="내용을 입력하세요.(예: 점심식사)"
-                  value={newTransaction.description}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>금액</label>
-                <input
-                  type="number"
-                  name="amount"
-                  placeholder="금액을 입력하세요.(예: 12000)"
-                  value={newTransaction.amount}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-
               <div className="modal-buttons">
                 <button type="submit">저장</button>
-                <button type="button" onClick={handleModalClose}>닫기</button>
+                <button type="button" onClick={handleModalClose}>취소</button>
               </div>
             </form>
           </div>
