@@ -1,129 +1,221 @@
 .goal-container {
-  padding: 20px;
-  max-width: 800px;
+  padding: 40px;
+  max-width: 1200px;
   margin: 0 auto;
-  overflow: hidden; 
 }
 
-.profile-section {
+.goal-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  display: flex;
+  padding: 30px;
+  gap: 30px;
+  min-height: 700px;  /* 800px에서 700px로 감소 */
+}
+
+/* 왼쪽 섹션 */
+.goal-profile-section {
+  width: 35%;
+  padding: 40px 20px;  /* 60px에서 40px로 감소 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 100px;     /* 세로 가운데 */
-  justify-content: center;    /* 가로 가운데 */
-}
-
-.profile-image {
-  width: 250px;
-  height: 250px;
-  border-radius: 10px;
-}
-
-.level-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.level-info h2 {
-  margin: 0;
-  font-size: 30px;
-}
-
-.level-info p {
-  margin: 0;
-  color: #666;
-  font-size: 20px;
-}
-
-
-/*금액 그룹*/
-.target-amount-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;        /* 세로 가운데 */
-  justify-content: center;    /* 가로 가운데 */
-  margin-bottom: 50px;
-  margin-top: 50px;
-}
-
-.amount-input-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
   position: relative;
 }
 
-.amount-input,
-.confirm-button {
-  box-sizing: border-box;
-}
-
-
-.amount-input {
-  padding: 10px;
-  font-size: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px 10px 10px 30px; /* 왼쪽에 ₩ 공간 확보 */
-  width: 320px;
-  height: 50px;
-  background-color: white;    /* 배경색 흰색 */
-  border: 1px solid #FFE55C;  /* 테두리 색 변경 */
-  
-}
-.won-symbol {
+/* 구분선 스타일 */
+.goal-profile-section::after {
+  content: '';
   position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
+  right: -15px;
+  top: 1px;     /* 40px에서 20px로 줄임 */
+  bottom: 1px;  /* 40px에서 20px로 줄임 */
+  width: 1px;
+  background: #e0e0e0;
+}
+
+/* 오른쪽 섹션 */
+.goal-target-section {
+  width: 65%;
+  padding: 30px;  /* 패딩 증가 */
+  background: #f8f8f8;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;  /* 간격 증가 */
+}
+
+/* 오른쪽 섹션 내 흰색 컨텐츠 박스 */
+.goal-content-box {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  min-height: 150px;  /* 180px에서 150px로 감소 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 두 번째 하얀색 박스 */
+.goal-stats-box {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  flex: 1;
+  min-height: 250px;  /* 300px에서 250px로 감소 */
+}
+
+.goal-content-box h3 {
   font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.goal-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.goal-profile-image {
+  width: 250px;
+  height: 250px;
+  border: 2px solid #FFE55C;
+  border-radius: 10px;
+  margin-bottom: 10px;  /* 60px에서 30px로 줄임 */
+}
+
+.goal-level-info {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;  /* 원래대로 복구 */
+}
+
+.goal-level-info h2 {
+  font-size: 32px;
+  margin-bottom: 15px;  /* 원래대로 복구 */
+}
+
+.goal-level-info p {
+  color: #666;
+  font-size: 18px;  /* 16px에서 18px로 증가 */
+  margin-bottom: 15px;
+}
+
+/* 입력 폼 */
+.goal-input-container {
+  width: 100%;
+  max-width: 800px;  /* 입력 폼의 최대 너비 설정 */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.goal-won-symbol {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #333;
 }
 
-
-.amount-input::placeholder {
-  font-size: 14px;
-  color: #aaa;    
+.goal-amount-input {
+  flex: 1;
+  height: 50px;
+  padding: 0 15px 0 35px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: right;
+  background: white;
 }
 
-
-.confirm-button {
-  padding: 10px 20px;
+.goal-input-button {
+  padding: 0 20px;
+  height: 50px;
   background-color: #FFE55C;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
   cursor: pointer;
-  font-weight: bold;
-  width: 320px;
-  font-size: 18px;
-  color: white;    
 }
 
+/* 금액 표시 */
+.goal-amount-display {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  border: 2px solid #F8DA00;  /* FFE55C에서 F8DA00으로 변경 */
+  padding: 15px 20px;
+  border-radius: 8px;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
 
+/* 진행도 바 스타일 */
+.goal-amount-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  background-color: #F8DA00;  /* 테두리와 동일한 색상 */
+  opacity: 0.3;  /* 투명도로 조절 */
+  transition: width 0.3s ease;
+  z-index: 0;
+}
+
+/* 초과분에 대한 스타일 추가 */
+.goal-amount-progress-exceeded {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  background-color: #ff6b6b;
+  opacity: 0.3;
+  transition: width 0.3s ease;
+  z-index: 0;
+}
+
+/* 금액 텍스트가 진행도 바 위에 보이도록 */
+.goal-amount-text {
+  position: relative;
+  z-index: 1;
+}
+
+.goal-result-info {
+  text-align: right;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
 
 /* 그래프 그룹 */
-.month-details {
+.goal-month-details {
   background-color: #fff;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.month-details h3 {
+.goal-month-details h3 {
   margin: 0 0 1.5rem 0;
   color: #333;
 }
 
-.details-box {
+.goal-details-box {
   background-color: #f9f9f9;
   padding: 1.5rem;
   border-radius: 6px;
 }
 
-.progress-bar {
+.goal-progress-bar {
   height: 20px;
   background-color: #eee;
   border-radius: 10px;
@@ -131,39 +223,241 @@
   margin-bottom: 1rem;
 }
 
-.progress-fill {
+.goal-progress-fill {
   height: 100%;
   background-color: #F8DA00;
   transition: width 0.3s ease;
 }
 
-.progress-fill.exceeded {
+.goal-progress-fill.goal-exceeded {
   background-color: #ff6b6b;
 }
 
-.amount-details {
+.goal-amount-details {
   color: #333;
 }
 
-.amount-details p {
+.goal-amount-details p {
   margin: 0.5rem 0;
 }
 
-.achievement {
+.goal-achievement {
   color: #F8DA00;
   font-weight: bold;
   margin-top: 1rem !important;
   font-size: 18px;
 }
 
-.achievement.failed {
+.goal-achievement.goal-failed {
   color: #ff6b6b;
   font-weight: bold;
   font-size: 18px;
 }
 
-.no-data {
+.goal-no-data {
   text-align: center;
   color: #666;
   margin: 2rem 0;
+}
+
+.goal-amount-input.error {
+  border-color: #ff6b6b;
+}
+
+.goal-error-message {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+/* 새로운 레벨바 디자인 */
+.level-bar-container {
+  width: 100%;
+  max-width: 200px;  /* 180px에서 200px로 증가 */
+  margin: 0 auto;
+  height: 8px;      /* 6px에서 8px로 증가 */
+  background: #f0f0f0;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-bar-segments {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 66.66%;  /* 3단계 중 2단계 채움 (33.33% * 2) */
+  height: 100%;
+  background: linear-gradient(90deg, #FF6B6B 0%, #FF8E8E 100%);  /* 그라데이션 효과 */
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* 레벨 단계 구분선 */
+.level-bar-divider {
+  position: absolute;
+  top: 0;
+  width: 3px;  /* 2px에서 3px로 증가 */
+  height: 100%;
+  background: #f0f0f0;
+}
+
+.level-bar-divider:nth-child(1) {
+  left: 33.33%;
+}
+
+.level-bar-divider:nth-child(2) {
+  left: 66.66%;
+}
+
+/* goal.css에 추가 */
+.monthly-objective-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: rgba(248, 218, 0, 0.1);
+  border-radius: 8px;
+}
+
+.objective-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.objective-header h3 {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  color: #F8DA00;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: rgba(248, 218, 0, 0.1);
+}
+
+.objective-input-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.objective-input-container input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #F8DA00;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.save-button {
+  background-color: #F8DA00;
+  border: none;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background-color: #e5c900;
+}
+
+.objective-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+  word-break: break-word;
+}
+
+.objective-list {
+  margin-top: 1rem;
+}
+
+.objective-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.objective-bullet {
+  color: #F8DA00;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.objective-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.no-objectives {
+  color: #666;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 1rem 0 0;
+}
+
+/* 입력 컨테이너 마진 수정 */
+.objective-input-container {
+  margin-bottom: 1rem;
+}
+
+.objective-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.objective-input-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.objective-input-item input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #F8DA00;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.add-more-button {
+  background: none;
+  border: 1px solid #F8DA00;
+  color: #F8DA00;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.add-more-button:hover {
+  background-color: rgba(248, 218, 0, 0.1);
+}
+
+.save-button {
+  margin-top: 1rem;
+  width: 100%;
 } 
