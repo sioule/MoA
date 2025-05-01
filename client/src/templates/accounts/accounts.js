@@ -224,7 +224,15 @@ const Accounts = () => {
                 />
               </div>
               <div className="form-group">
-                <label>설명</label>
+                <label>내용</label>
+                <select
+                  name="type"
+                  value={newTransaction.type}
+                  onChange={handleInputChange}
+                >
+                  <option value="expense">지출</option>
+                  <option value="income">수입</option>
+                </select><p></p>
                 <input
                   type="text"
                   name="description"
@@ -243,17 +251,7 @@ const Accounts = () => {
                   required
                 />
               </div>
-              <div className="form-group">
-                <label>유형</label>
-                <select
-                  name="type"
-                  value={newTransaction.type}
-                  onChange={handleInputChange}
-                >
-                  <option value="expense">지출</option>
-                  <option value="income">수입</option>
-                </select>
-              </div>
+
               <div className="modal-buttons">
                 <button type="submit">저장</button>
                 <button type="button" onClick={handleModalClose}>취소</button>
