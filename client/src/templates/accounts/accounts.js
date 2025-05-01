@@ -160,7 +160,7 @@ const Accounts = () => {
   
 </div>
 
-    <div className="button-wrapper">
+<div className="button-wrapper">
       <button className="write-button" onClick={handleModalOpen}>
             +
         </button>
@@ -224,15 +224,7 @@ const Accounts = () => {
                 />
               </div>
               <div className="form-group">
-                <label>내용</label>
-                <select
-                  name="type"
-                  value={newTransaction.type}
-                  onChange={handleInputChange}
-                >
-                  <option value="expense">지출</option>
-                  <option value="income">수입</option>
-                </select><p></p>
+                <label>설명</label>
                 <input
                   type="text"
                   name="description"
@@ -251,7 +243,25 @@ const Accounts = () => {
                   required
                 />
               </div>
-
+              <div className="form-group">
+                <label>유형</label>
+                <div className="type-toggle">
+                  <button
+                    type="button"
+                    className={newTransaction.type === 'income' ? 'active' : ''}
+                    onClick={() => setNewTransaction(prev => ({ ...prev, type: 'income' }))}
+                  >
+                    수입
+                  </button>
+                  <button
+                    type="button"
+                    className={newTransaction.type === 'expense' ? 'active' : ''}
+                    onClick={() => setNewTransaction(prev => ({ ...prev, type: 'expense' }))}
+                  >
+                    지출
+                  </button>
+                </div>
+              </div>
               <div className="modal-buttons">
                 <button type="submit">저장</button>
                 <button type="button" onClick={handleModalClose}>취소</button>
