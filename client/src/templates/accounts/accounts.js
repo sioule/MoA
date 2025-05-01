@@ -126,12 +126,26 @@ const Accounts = () => {
 
       
       <div className="accounts-header" style={{ position: 'relative' }}>
-  <button onClick={handlePrevMonth}>&lt;</button>
-  <h2 onClick={toggleCalendar}>
-    {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
-  </h2>
-  <button onClick={handleNextMonth}>&gt;</button>
-  {showCalendar && (
+      <button 
+          className="arrow" 
+          onClick={handlePrevMonth}
+          aria-label="이전 연도"
+        >
+          {'<'}
+      </button>
+
+    <h2 onClick={toggleCalendar}>
+      {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
+    </h2>
+
+   <button 
+        className="arrow" 
+        onClick={handleNextMonth}
+        aria-label="다음 연도"
+        >
+          {'>'}
+   </button>
+
     <div className="calendar-container">
       <Calendar
         view="year"
@@ -141,7 +155,7 @@ const Accounts = () => {
         }}
       />
     </div>
-  )}
+  
 </div>
 
     <div className="button-wrapper">

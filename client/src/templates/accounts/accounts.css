@@ -244,3 +244,13 @@
   color: #666;
   font-size: 16px;
 }
+
+  /* 좌우 화살표만 hover 효과 유지 */
+  .react-calendar__navigation__arrow {
+    cursor: pointer !important;
+  }
+  
+  .react-calendar__navigation__arrow:hover {
+    background-color: rgba(248, 218, 0, 0.2) !important;
+    color: #333 !important;
+  } 
