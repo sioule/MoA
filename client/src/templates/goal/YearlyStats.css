@@ -1,0 +1,248 @@
+.yearly-stats-container {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .year-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
+  
+  .year-selector h2 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .arrow {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #666;
+    border: none;
+    background: none;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .arrow:hover {
+    background-color: rgba(248, 218, 0, 0.2);  /* 노란색 배경 */
+    color: #333;
+  }
+  
+  /* 화살표 아이콘 스타일 */
+  .arrow-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .stats-graph {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100px;
+    margin-bottom: 0.8rem;
+    padding: 0.3rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .month-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25px;
+    cursor: pointer;
+    padding: 0 2px;
+  }
+  
+  .bar-container {
+    width: 100%;
+    height: 60px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 0.2rem;
+    overflow: hidden;
+  }
+  
+  .bar-fill {
+    width: 100%;
+    background-color: #F8DA00;
+    position: absolute;
+    bottom: 0;
+    transition: all 0.3s ease;
+    border-radius: 6px 6px 0 0;
+    max-height: 100%;
+  }
+  
+  .bar-fill.exceeded {
+    background-color: #ff6b6b;
+  }
+  
+  .bar-fill.selected {
+    opacity: 1;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bar-fill.selected.exceeded {
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+  }
+  
+  .progress-fill.exceeded {
+    background-color: #ff6b6b;
+  }
+  
+  .achievement.failed {
+    color: #ff6b6b;
+  }
+  
+  .month-label {
+    font-size: 0.7rem;
+    color: #666;
+  }
+  
+  .month-details {
+    padding: 0.5rem;
+  }
+  
+  .month-details h3 {
+    margin: 0 0 1.5rem 0;
+    color: #333;
+  }
+  
+  .details-box {
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+  
+  .progress-bar {
+    height: 15px;
+    background-color: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: #F8DA00;
+    transition: width 0.3s ease;
+    max-width: 100%;
+  }
+  
+  .amount-details {
+    color: #333;
+  }
+  
+  .amount-details p {
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+  }
+  
+  .achievement {
+    color: #F8DA00;
+    font-weight: bold;
+    margin-top: 1rem !important;
+  }
+  
+  .no-data {
+    text-align: center;
+    color: #666;
+    margin: 2rem 0;
+  }
+  
+  .calendar-container {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Calendar 커스텀 스타일 */
+  .calendar-container .react-calendar {
+    border: none;
+    background: none;
+    width: 350px;
+  }
+  
+  /* 상단 네비게이션 스타일 */
+  .react-calendar__navigation {
+    margin-bottom: 20px;
+  }
+  
+  .react-calendar__navigation button {
+    border: none;
+    background: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .react-calendar__navigation button:hover {
+    background-color: rgba(248, 218, 0, 0.2);
+    color: #333;
+  }
+  
+  /* 월 선택 버튼 스타일 */
+  .react-calendar__year-view__months__month {
+    border: none !important;
+    background: none !important;
+    padding: 20px !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .react-calendar__year-view__months__month:hover {
+    background-color: rgba(248, 218, 0, 0.2) !important;
+  }
+  
+  .react-calendar__year-view__months__month:enabled:focus {
+    background-color: rgba(248, 218, 0, 0.2) !important;
+  }
+  
+  /* 선택된 월 스타일 */
+  .react-calendar__tile--active {
+    background-color: rgba(248, 218, 0, 0.2) !important;
+    color: #333 !important;
+  }
+  
+  /* 불필요한 border 제거 */
+  .react-calendar__tile {
+    border: none !important;
+    margin: 0 !important;
+  }
+  
+  /* 연도 버튼 스타일 */
+  .react-calendar__navigation__label {
+    pointer-events: none !important;
+    cursor: default !important;
+  }
+  
+  .react-calendar__navigation__label:hover {
+    background: none !important;
+  }
+  
+  /* 좌우 화살표만 hover 효과 유지 */
+  .react-calendar__navigation__arrow {
+    cursor: pointer !important;
+  }
+  
+  .react-calendar__navigation__arrow:hover {
+    background-color: rgba(248, 218, 0, 0.2) !important;
+    color: #333 !important;
+  } 
