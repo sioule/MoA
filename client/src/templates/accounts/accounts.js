@@ -9,7 +9,7 @@ const Accounts = () => {
   const [transactions, setTransactions] = useState([
     {
       id: 1,
-      date: '2025.04.22',
+      date: '2025.05.22',
       description: '친구들이랑 점심식사',
       amount: -12000,
       type: 'expense'
@@ -23,7 +23,7 @@ const Accounts = () => {
     },
     {
       id: 3,
-      date: '2025.03.05',
+      date: '2025.05.05',
       description: '용돈',
       amount: 250000,
       type: 'income'
@@ -146,15 +146,17 @@ const Accounts = () => {
           {'>'}
    </button>
 
-    <div className="calendar-container">
-      <Calendar
-        view="year"
-        onClickMonth={(value) => {
-          setSelectedDate(new Date(value));
-          setShowCalendar(false);
-        }}
-      />
-    </div>
+    {showCalendar && (
+      <div className="calendar-container">
+        <Calendar
+          view="year"
+          onClickMonth={(value) => {
+            setSelectedDate(new Date(value));
+            setShowCalendar(false);
+          }}
+        />
+      </div>
+    )}
   
 </div>
 
