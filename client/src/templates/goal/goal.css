@@ -460,4 +460,41 @@
 .save-button {
   margin-top: 1rem;
   width: 100%;
+}
+
+/* 이달의 목표 리스트 양쪽정렬 스타일 */
+.monthly-objective-list ul {
+  text-align: justify;
+  text-justify: inter-word;
+  padding-left: 0;  /* 기본 패딩 제거 */
+  margin: 0;  /* 기본 마진 제거 */
+  list-style: none;  /* 기본 bullet 제거 */
+}
+
+.monthly-objective-list ul:after {
+  content: '';
+  display: inline-block;
+  width: 100%;
+}
+
+.monthly-objective-list li {
+  text-align: justify;
+  text-justify: inter-word;
+  width: 100%;
+  padding: 4px 0;  /* 위아래 간격 */
+  position: relative;
+  padding-left: 1.2em;  /* bullet을 위한 공간 */
+}
+
+.monthly-objective-list li:before {
+  content: "";  /* 텍스트 대신 빈 content */
+  display: inline-block;
+  width: 4px;  /* 원 크기 */
+  height: 4px;
+  background-color: #F8DA00;  /* MoA 테마 색상 */
+  border-radius: 50%;  /* 원형으로 만들기 */
+  position: absolute;
+  left: 0;
+  top: 50%;  /* 세로 중앙 정렬 */
+  transform: translateY(-50%);
 } 
