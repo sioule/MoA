@@ -9,6 +9,8 @@ const Register = () => {
     password: '',
     nickname: ''
   });
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,11 +20,26 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('회원가입 시도:', formData);
-    // 회원가입 로직 구현 후 로그인 페이지로 이동
-    // navigate('/');
+    setError('');
+    try {
+      const response = await fetch('http://127.0.0.1:5001/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.error || '회원가입에 실패했습니다.');
+        return;
+      }
+      // 회원가입 성공 시
+      alert('회원가입이 성공적으로 완료되었습니다!');
+      navigate('/login');
+    } catch (err) {
+      setError('서버 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -59,9 +76,9 @@ const Register = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group" style={{ position: 'relative' }}>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 id="password"
                 name="password"
                 placeholder="비밀번호"
@@ -69,6 +86,23 @@ const Register = () => {
                 onChange={handleChange}
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                style={{
+                  position: 'absolute',
+                  right: 10,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+                tabIndex={-1}
+                aria-label="비밀번호 보기/숨기기"
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
             </div>
 
             <div className="form-group">
@@ -87,6 +121,7 @@ const Register = () => {
             <button type="button" className="back-to-login" onClick={() => navigate('/')}>
               로그인으로 돌아가기
             </button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
           </form>
         </div>
       </div>

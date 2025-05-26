@@ -6,6 +6,7 @@ const Goal = () => {
   const [targetAmount, setTargetAmount] = useState('');
   const [isError, setIsError] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonthData, setSelectedMonthData] = useState({
     목표금액: 0,
     사용금액: 0,
@@ -16,22 +17,24 @@ const Goal = () => {
   const [objectives, setObjectives] = useState([]);
   const [objectiveInputs, setObjectiveInputs] = useState(['']);
   const [isAddingObjectives, setIsAddingObjectives] = useState(false);
+  const [monthlyGoals, setMonthlyGoals] = useState([]);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  // 현재 월의 목표 데이터 조회
+  const userId = localStorage.getItem('user_id');
+  const token = localStorage.getItem('token');
+
+  // 현재 월의 목표 데이터 조회 (summary API 사용)
   const fetchGoalData = async () => {
     try {
       const response = await fetch(
-        `/api/goals/test_user?year=${new Date().getFullYear()}&month=${selectedMonth}`
+        `/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
       );
       const data = await response.json();
-      
-      if (data && data.budget) {
-        setSelectedMonthData({
-          목표금액: data.budget,
-          사용금액: data.사용금액 || 0,
-          달성성공: (data.사용금액 || 0) <= data.budget
-        });
-      }
+      setSelectedMonthData({
+        목표금액: data.budget,
+        사용금액: data.total_spent || 0,
+        달성성공: (data.total_spent || 0) <= data.budget
+      });
     } catch (error) {
       console.error('목표 조회 실패:', error);
     }
@@ -41,7 +44,10 @@ const Goal = () => {
   const fetchObjectives = async () => {
     try {
       const response = await fetch(
-        `/api/goals/objectives/test_user?year=${new Date().getFullYear()}&month=${selectedMonth}`
+        `/api/goals/objectives/${userId}?year=${selectedYear}&month=${selectedMonth}`,
+        {
+          headers: { 'Authorization': token }
+        }
       );
       const data = await response.json();
       setObjectives(data);
@@ -50,74 +56,92 @@ const Goal = () => {
     }
   };
 
-  // useEffect 수정
+  // 이달의 목표 3개만 조회
+  const fetchMonthlyGoals = async () => {
+    try {
+      const response = await fetch(
+        `/api/goals/monthly-list?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
+      );
+      const data = await response.json();
+      setMonthlyGoals(data);
+    } catch (error) {
+      console.error('이달의 목표 조회 실패:', error);
+    }
+  };
+
   useEffect(() => {
     fetchGoalData();
     fetchObjectives();
-  }, [selectedMonth]);
+    fetchMonthlyGoals();
+    // eslint-disable-next-line
+  }, [selectedMonth, selectedYear]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!targetAmount) {
+    const amount = Number(targetAmount);
+    if (isNaN(amount) || amount <= 0) {
       setIsError(true);
+      setErrorMsg('금액을 입력해주세요');
       return;
     }
-
     try {
-      console.log('전송할 데이터:', {
-        user_id: 'test_user',
-        year: new Date().getFullYear(),
-        month: selectedMonth,
-        budget: parseInt(targetAmount)
-      });
-
-      const response = await fetch('/api/goals', {
+      const response = await fetch('/api/goals/monthly', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': token
         },
         body: JSON.stringify({
-          user_id: 'test_user',
-          year: new Date().getFullYear(),
+          user_id: userId,
+          year: selectedYear,
           month: selectedMonth,
-          budget: parseInt(targetAmount)
+          budget: amount,
+          objective: ''
         }),
       });
-
       const data = await response.json();
-      console.log('서버 응답:', data);  // 로그 추가
-      
       if (!response.ok) {
-        throw new Error(data.error || '목표 설정에 실패했습니다.');
+        setIsError(true);
+        setErrorMsg(data.error || '목표 설정에 실패했습니다.');
+        return;
       }
-
-      // 성공적으로 저장되면 데이터 업데이트
       setSelectedMonthData({
-        목표금액: parseInt(targetAmount),
+        목표금액: amount,
         사용금액: 0,
         달성성공: true
       });
       setTargetAmount('');
       setIsError(false);
-
-      // 목표 설정 후 데이터 다시 조회
+      setErrorMsg('');
       fetchGoalData();
+      fetchMonthlyGoals();
     } catch (error) {
       console.error('목표 설정 실패:', error);
       setIsError(true);
+      setErrorMsg('목표 설정에 실패했습니다.');
     }
   };
 
   const handleKeyPress = (e) => {
+    if (!/[\d\b]/.test(e.key)) {
+      e.preventDefault();
+    }
     if (e.key === 'Enter') {
       handleSubmit(e);
     }
   };
 
-  // 목표 입력창 추가
+  const handleAmountChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setTargetAmount(value);
+    setIsError(false);
+  };
+
+  // 목표 입력창 추가 (최대 3개)
   const addObjectiveInput = () => {
-    setObjectiveInputs([...objectiveInputs, '']);
+    if (objectiveInputs.length < 3) {
+      setObjectiveInputs([...objectiveInputs, '']);
+    }
   };
 
   // 목표 입력값 변경
@@ -127,33 +151,30 @@ const Goal = () => {
     setObjectiveInputs(newInputs);
   };
 
-  // 목표 저장 함수 수정
+  // 목표 저장 함수 수정 (입력 후 리스트로 표시)
   const handleObjectiveSubmit = async () => {
     const validObjectives = objectiveInputs.filter(obj => obj.trim() !== '');
     if (validObjectives.length === 0) return;
-    
     try {
       const response = await fetch('/api/goals/objectives', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': token
         },
         body: JSON.stringify({
-          user_id: 'test_user',
-          year: new Date().getFullYear(),
-          month: new Date().getMonth() + 1,
+          user_id: userId,
+          year: selectedYear,
+          month: selectedMonth,
           objectives: validObjectives
         }),
       });
-
       if (!response.ok) {
         throw new Error('목표 설정에 실패했습니다.');
       }
-
-      // 목표 리스트 다시 조회
       fetchObjectives();
-      setObjectiveInputs(['']); // 입력창 초기화
-      setIsAddingObjectives(false); // 입력 모드 종료
+      setObjectiveInputs(['']);
+      setIsAddingObjectives(false); // 완료 후 입력창 닫기
     } catch (error) {
       console.error('목표 설정 실패:', error);
     }
@@ -167,13 +188,20 @@ const Goal = () => {
           <img src="/images/moa-fox.png" alt="MoA Fox" className="goal-profile-image" />
           <div className="goal-level-info">
             <h2>Lv. 3</h2>
-            <p>민지 (mj@naver.com)</p>
+            <p>
+              <span style={{ color: '#555', fontWeight: 'bold' }}>
+                {localStorage.getItem('nickname')}
+              </span>
+              <br />
+              <span style={{ display: 'inline-block', marginTop: '8px', color: '#888' }}>
+                ({localStorage.getItem('email')})
+              </span>
+            </p>
             <div className="level-bar-container">
               <div className="level-bar-segments"></div>
               <div className="level-bar-divider"></div>
               <div className="level-bar-divider"></div>
             </div>
-            
             {/* 이달의 목표 섹션 추가 */}
             <div className="monthly-objective-section">
               <div className="objective-header">
@@ -181,56 +209,64 @@ const Goal = () => {
                 <button 
                   className="edit-button"
                   onClick={() => setIsAddingObjectives(!isAddingObjectives)}
+                  disabled={isAddingObjectives && objectiveInputs.length >= 3}
                 >
                   {isAddingObjectives ? '취소' : '추가'}
                 </button>
               </div>
+              {/* 입력창, 추가 버튼, 완료 버튼 */}
               {isAddingObjectives ? (
                 <div className="objective-inputs-container">
                   {objectiveInputs.map((input, index) => (
-                    <div key={index} className="objective-input-item">
+                    <div key={index} className="objective-input-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <input
                         type="text"
                         value={input}
                         onChange={(e) => handleObjectiveChange(index, e.target.value)}
                         placeholder={`목표 ${index + 1}`}
                         maxLength={50}
+                        style={{ flex: 1 }}
                       />
-                      {index === objectiveInputs.length - 1 && (
-                        <button 
+                      {index === objectiveInputs.length - 1 && objectiveInputs.length < 3 && (
+                        <button
                           className="add-more-button"
                           onClick={addObjectiveInput}
+                          disabled={objectiveInputs.length >= 3}
+                          style={{ marginLeft: '4px' }}
                         >
                           +
                         </button>
                       )}
                     </div>
                   ))}
-                  <button 
-                    className="save-button"
-                    onClick={handleObjectiveSubmit}
-                  >
-                    완료
-                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+                    <button
+                      className="save-button"
+                      onClick={handleObjectiveSubmit}
+                      style={{ minWidth: '120px' }}
+                    >
+                      완료
+                    </button>
+                  </div>
                 </div>
               ) : (
-                <div className="objective-list">
+                <div className="monthly-objective-list">
                   {objectives.length > 0 ? (
-                    objectives.map((obj, index) => (
-                      <div key={index} className="objective-item">
-                        <span className="objective-bullet">•</span>
-                        <p>{obj.objective}</p>
-                      </div>
-                    ))
+                    <ul style={{ paddingLeft: '1.2em', margin: 0 }}>
+                      {objectives.slice(0, 3).map((obj, idx) => (
+                        <li key={idx} style={{ listStyle: 'none', marginBottom: '4px' }}>
+                          {obj.objective || obj}
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
-                    <p className="no-objectives">목표를 입력해주세요</p>
+                    <div className="monthly-goal-item">이번 달 목표가 없습니다.</div>
                   )}
                 </div>
               )}
             </div>
           </div>
         </div>
-
         {/* 오른쪽 섹션 */}
         <div className="goal-target-section">
           <div className="goal-content-box">
@@ -242,10 +278,7 @@ const Goal = () => {
                   <input
                     type="text"
                     value={targetAmount}
-                    onChange={(e) => {
-                      setTargetAmount(e.target.value);
-                      setIsError(false);
-                    }}
+                    onChange={handleAmountChange}
                     onKeyPress={handleKeyPress}
                     placeholder="목표액을 입력해주세요"
                     className={`goal-amount-input ${isError ? 'error' : ''}`}
@@ -281,10 +314,9 @@ const Goal = () => {
                   </span>
                 </div>
               )}
-              {isError && <p className="goal-error-message">금액을 입력해주세요</p>}
+              {isError && <p className="goal-error-message">{errorMsg}</p>}
             </div>
           </div>
-          
           <div className="goal-stats-box">
             <YearlyStats />
           </div>

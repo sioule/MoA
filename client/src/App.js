@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './templates/login/Login';
+import Login from './templates/login/login';
 import Register from './templates/register/Register';
 import Menu from './components/menu/menu';
 import Goal from './templates/goal/goal';
@@ -10,9 +9,10 @@ import Statistics from './templates/statistics/Statistics';
 import './App.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
 
   const handleLogout = () => {
+    localStorage.clear();
     setIsLoggedIn(false);
   };
 
@@ -23,7 +23,7 @@ function App() {
         <div className={`content ${isLoggedIn ? 'with-menu' : ''}`}>
           <Routes>
             <Route path="/" element={
-              isLoggedIn ? <Navigate to="/dashboard" /> : <Login />
+              isLoggedIn ? <Navigate to="/dashboard" /> : <Login setIsLoggedIn={setIsLoggedIn} />
             } />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<div></div>} />

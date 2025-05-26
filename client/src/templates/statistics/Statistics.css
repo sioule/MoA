@@ -66,12 +66,25 @@
   overflow: hidden;
 }
 
+/* 빈 원형 차트 */
+.empty-pie {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* 3개월 통계 세그먼트 스타일 */
 .pie-segment {
   position: absolute;
   width: 100%;
   height: 100%;
   transform-origin: 50% 50%;
+  clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
 }
+
+.segment-1 { opacity: 0.85; }
+.segment-2 { opacity: 1; }
+.segment-3 { opacity: 0.7; }
 
 .pie-segment.first {
   background-color: #F8DA00;
@@ -171,6 +184,7 @@
     #F8DA00 0% 70%,  /* 수입 70% */
     #ff6b6b 70% 100%  /* 지출 30% */
   );
+  transition: all 0.3s ease;
 }
 
 .monthly-stats .percentage-bars {
@@ -217,16 +231,114 @@
   font-weight: bold;
 }
 
-/* 한 달 통계의 텍스트 스타일 */
+/* 공통 h2 스타일 */
+.quarterly-stats h2,
 .monthly-stats h2 {
-  margin-bottom: 2rem;
   font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+/* monthly-header 스타일 제거 */
+.date-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;  /* 0.5rem에서 1.5rem으로 증가 */
+}
+
+/* 화살표 버튼 스타일 */
+.date-selector .arrow {
+  padding: 4px;
+  font-size: 1rem;
+  margin: 0 0.5rem;  /* 좌우 마진 추가 */
+}
+
+/* calendar-container 위치 조정 */
+.calendar-container {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 1001;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar 커스텀 스타일 */
+.calendar-container .react-calendar {
+  border: none;
+  background: none;
+  width: 350px;
+}
+
+/* 상단 네비게이션 스타일 */
+.react-calendar__navigation {
+  margin-bottom: 20px;
+}
+
+.react-calendar__navigation button {
+  border: none;
+  background: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: rgba(248, 218, 0, 0.2);
   color: #333;
 }
 
-.monthly-stats .amount {
-  margin-left: auto;  /* 금액을 오른쪽으로 밀어냄 */
-  font-weight: bold;
+/* 월 선택 버튼 스타일 */
+.react-calendar__year-view__months__month {
+  border: none !important;
+  background: none !important;
+  padding: 20px !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__year-view__months__month:hover {
+  background-color: rgba(248, 218, 0, 0.2) !important;
+}
+
+.react-calendar__year-view__months__month:enabled:focus {
+  background-color: rgba(248, 218, 0, 0.2) !important;
+}
+
+/* 선택된 월 스타일 */
+.react-calendar__tile--active {
+  background-color: rgba(248, 218, 0, 0.2) !important;
+  color: #333 !important;
+}
+
+/* 불필요한 border 제거 */
+.react-calendar__tile {
+  border: none !important;
+  margin: 0 !important;
+}
+
+/* 연도 버튼 스타일 */
+.react-calendar__navigation__label {
+  pointer-events: none !important;  /* 클릭 비활성화 */
+  cursor: default !important;
+}
+
+.react-calendar__navigation__label:hover {
+  background: none !important;  /* hover 효과 제거 */
+}
+
+/* 좌우 화살표만 hover 효과 유지 */
+.react-calendar__navigation__arrow {
+  cursor: pointer !important;
+}
+
+.react-calendar__navigation__arrow:hover {
+  background-color: rgba(248, 218, 0, 0.2) !important;
+  color: #333 !important;
 }
 
 .chart-legend {
@@ -254,4 +366,10 @@
 
 .legend-color.expense {
   background-color: #ff6b6b;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
 } 
