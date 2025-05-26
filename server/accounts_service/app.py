@@ -6,16 +6,20 @@ import jwt
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
-DB_HOST = os.getenv('DB_HOST', '34.22.105.79')
-DB_USER = os.getenv('DB_USER', 'minjis')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'cloud')
-DB_NAME = os.getenv('DB_NAME', 'moa_db')
+# .env 파일의 절대 경로를 계산
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=env_path)
+
+SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+DB_HOST = os.getenv('DB_HOST')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_NAME = os.getenv('DB_NAME')
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -27,10 +31,14 @@ def get_db_connection():
 
 def verify_token(token):
     try:
+        if token and token.lower().startswith('bearer '):
+            token = token.split()[1]
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+
         return payload['user_id']
-    except Exception:
+    except Exception as e:
         return None
+
 
 # 가계부 항목 작성
 @app.route("/api/accounts", methods=['POST'])
