@@ -94,8 +94,7 @@ def get_accounts_by_month():
     except Exception:
         raise
 
-
-
-
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
+
+
