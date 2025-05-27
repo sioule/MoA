@@ -37,7 +37,7 @@ const Accounts = () => {
               id: item.account_id,
               date: item.date.replace(/-/g, '.'),
               description: item.content,
-              amount: item.type === 'expense' ? -Math.abs(item.cost) : Math.abs(item.cost),
+              amount: item.type === '지출' ? -Math.abs(item.cost) : Math.abs(item.cost),
               type: item.type
             }))
           );
@@ -92,7 +92,7 @@ const Accounts = () => {
               id: item.account_id,
               date: item.date.replace(/-/g, '.'),
               description: item.content,
-              amount: item.type === '지출출' ? -Math.abs(item.cost) : Math.abs(item.cost),
+              amount: item.type === '지출' ? -Math.abs(item.cost) : Math.abs(item.cost),
               type: item.type
             }))
           );
@@ -266,7 +266,7 @@ const Accounts = () => {
                 <div className="transaction-date">{transaction.date}</div>
                 <div className="transaction-description">{transaction.description}</div>
               </div>
-              <div className={`transaction-amount ${transaction.amount < 0 ? '지출' : '수입'}`}>
+              <div className={`transaction-amount ${transaction.amount < 0 ? 'expense' : 'income'}`}>
                 {transaction.amount < 0 ? '-' : '+'} {Math.abs(transaction.amount).toLocaleString()}원
               </div>
             </div>
