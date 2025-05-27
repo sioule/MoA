@@ -273,6 +273,9 @@
   cursor: pointer;
   border-radius: 0;
   transition: background 0.2s, color 0.2s;
+    /* 아래 두 줄 추가 */
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .type-toggle button:first-child {

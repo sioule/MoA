@@ -101,7 +101,6 @@ def get_accounts_by_month_logic(user_id, year, month):
         SELECT account_id, date, type, content, cost
         FROM Account
         WHERE user_id = %s AND YEAR(date) = %s AND MONTH(date) = %s
-        ORDER BY date ASC
     """
 
     cursor.execute(query, (user_id, year, month))

@@ -224,7 +224,26 @@ const Accounts = () => {
                 />
               </div>
               <div className="form-group">
-                <label>설명</label>
+              <div className="form-group">
+
+              </div>
+                <label>내용</label>
+                <div className="type-toggle">
+                  <button
+                    type="button"
+                    className={newTransaction.type === 'income' ? 'active' : ''}
+                    onClick={() => setNewTransaction(prev => ({ ...prev, type: 'income' }))}
+                  >
+                    수입
+                  </button>
+                  <button
+                    type="button"
+                    className={newTransaction.type === 'expense' ? 'active' : ''}
+                    onClick={() => setNewTransaction(prev => ({ ...prev, type: 'expense' }))}
+                  >
+                    지출
+                  </button>
+                </div>
                 <input
                   type="text"
                   name="description"
@@ -243,25 +262,7 @@ const Accounts = () => {
                   required
                 />
               </div>
-              <div className="form-group">
-                <label>유형</label>
-                <div className="type-toggle">
-                  <button
-                    type="button"
-                    className={newTransaction.type === 'income' ? 'active' : ''}
-                    onClick={() => setNewTransaction(prev => ({ ...prev, type: 'income' }))}
-                  >
-                    수입
-                  </button>
-                  <button
-                    type="button"
-                    className={newTransaction.type === 'expense' ? 'active' : ''}
-                    onClick={() => setNewTransaction(prev => ({ ...prev, type: 'expense' }))}
-                  >
-                    지출
-                  </button>
-                </div>
-              </div>
+
               <div className="modal-buttons">
                 <button type="submit">저장</button>
                 <button type="button" onClick={handleModalClose}>취소</button>
