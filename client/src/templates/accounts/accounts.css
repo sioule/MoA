@@ -202,6 +202,11 @@
   }
 
   /* 달력 스타일 */
+  .parent-of-calendar-container {
+    position: relative;
+    display: inline-block;
+  }
+  
   .calendar-container {
     position: absolute;
     top: 100%; /* 부모 요소 기준으로 아래에 위치 */
