@@ -19,18 +19,22 @@ from accountsService import (
     verify_token,
     create_account_logic,
     update_account_logic,
-    delete_account_logic
+    delete_account_logic,
+    get_accounts_by_month_logic
 )
 
 app = Flask(__name__)
 CORS(app)
 
+# 서버에러 예외처리
 @app.errorhandler(Exception)
 def handle_exception(e):
     if isinstance(e, HTTPException):
         return e
     return jsonify({'error': 'Internal server error. Please try again later.'}), 500
 
+
+# 가계부 작성
 @app.route("/api/accounts", methods=['POST'])
 def create_account():
     try:
@@ -44,6 +48,8 @@ def create_account():
     except Exception:
         raise
 
+
+# 가계부 수정
 @app.route("/api/accounts/<int:account_id>", methods=['PUT'])
 def update_account(account_id):
     try:
@@ -57,6 +63,8 @@ def update_account(account_id):
     except Exception:
         raise
 
+
+# 가계부 삭제
 @app.route("/api/accounts/<int:account_id>", methods=['DELETE'])
 def delete_account(account_id):
     try:
@@ -69,5 +77,25 @@ def delete_account(account_id):
     except Exception:
         raise
 
+
+# 월별 가계부 조회
+@app.route("/api/accounts", methods=['GET'])
+def get_accounts_by_month():
+    try:
+        token = request.headers.get('Authorization')
+        user_id = verify_token(token)
+        if not user_id:
+            return jsonify({'error': 'Authentication required.'}), 401
+
+        year = request.args.get('year', type=int)
+        month = request.args.get('month', type=int)
+        result, status = get_accounts_by_month_logic(user_id, year, month)
+        return jsonify(result), status
+    except Exception:
+        raise
+
+
+
+
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)

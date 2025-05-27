@@ -2,6 +2,8 @@ import os
 import mysql.connector
 import jwt
 from dotenv import load_dotenv
+import datetime
+
 
 # .env 파일 로드 (server/.env)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -63,6 +65,8 @@ def update_account_logic(user_id, account_id, data):
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
+
+    # MySQL이 문자열 날짜 데이터(2025-05-20)를 DATE 타입으로 자동 변환
     cursor.execute(
         "UPDATE Account SET date=%s, type=%s, content=%s, cost=%s WHERE account_id=%s AND user_id=%s",
         (date, type_, content, cost, account_id, user_id)
@@ -84,3 +88,30 @@ def delete_account_logic(user_id, account_id):
     cursor.close()
     conn.close()
     return {'message': 'Account item deleted.', 'account_id': account_id}, 200
+
+
+
+def get_accounts_by_month_logic(user_id, year, month):
+    if not (year and month):
+        return {'error': 'Year and month are required.'}, 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+        SELECT account_id, date, type, content, cost
+        FROM Account
+        WHERE user_id = %s AND YEAR(date) = %s AND MONTH(date) = %s
+        ORDER BY date ASC
+    """
+
+    cursor.execute(query, (user_id, year, month))
+    results = cursor.fetchall()
+
+    # 날짜(Tue, 20 May 2025 00:00:00 GMT)를 문자열로 변환 (2025-05-20)
+    for row in results:
+        if isinstance(row['date'], (datetime.date, datetime.datetime)):
+            row['date'] = row['date'].strftime('%Y-%m-%d')
+    cursor.close()
+    conn.close()
+    return {'accounts': results}, 200
+
