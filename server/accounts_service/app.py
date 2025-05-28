@@ -35,7 +35,7 @@ def handle_exception(e):
 
 
 # 가계부 작성
-@app.route("/api/accounts", methods=['POST'])
+@app.route("/api/account", methods=['POST'])
 def create_account():
     try:
         token = request.headers.get('Authorization')
@@ -50,7 +50,7 @@ def create_account():
 
 
 # 가계부 수정
-@app.route("/api/accounts/<int:account_id>", methods=['PUT'])
+@app.route("/api/account/<int:account_id>", methods=['PUT'])
 def update_account(account_id):
     try:
         token = request.headers.get('Authorization')
@@ -65,7 +65,7 @@ def update_account(account_id):
 
 
 # 가계부 삭제
-@app.route("/api/accounts/<int:account_id>", methods=['DELETE'])
+@app.route("/api/account/<int:account_id>", methods=['DELETE'])
 def delete_account(account_id):
     try:
         token = request.headers.get('Authorization')
