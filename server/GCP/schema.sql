@@ -5,6 +5,7 @@ CREATE TABLE User (
     password VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
     level INT DEFAULT 1,
+    exp INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
