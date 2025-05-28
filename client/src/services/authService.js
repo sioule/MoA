@@ -80,4 +80,9 @@ export const updateUserInfo = async (token, name, currentPassword, newPassword) 
     } catch (error) {
         throw error.response?.data || { error: '사용자 정보 수정 중 오류가 발생했습니다' };
     }
+};
+
+export const getUserLevel = async (userId) => {
+    const response = await axios.get(`${API_URL}/api/user/level?user_id=${userId}`);
+    return response.data;
 }; 

@@ -274,13 +274,13 @@
 /* 새로운 레벨바 디자인 */
 .level-bar-container {
   width: 100%;
-  max-width: 200px;  /* 180px에서 200px로 증가 */
   margin: 0 auto;
-  height: 8px;      /* 6px에서 8px로 증가 */
-  background: #f0f0f0;
-  border-radius: 10px;
   position: relative;
   overflow: hidden;
+  /* max-width: 200px; */
+  /* height: 8px; */
+  /* background: #f0f0f0; */
+  /* border-radius: 10px; */
 }
 
 .level-bar-segments {
