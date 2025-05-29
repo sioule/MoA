@@ -114,4 +114,3 @@ def get_accounts_by_month_logic(user_id, year, month):
     cursor.close()
     conn.close()
     return {'accounts': results}, 200
-

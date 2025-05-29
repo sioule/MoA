@@ -23,6 +23,12 @@ from accountsService import (
     get_accounts_by_month_logic
 )
 
+from statService import (
+    verify_token,
+    get_monthly_stats_logic,
+    get_recent_months_stats_logic
+)
+
 app = Flask(__name__)
 CORS(app)
 
@@ -93,6 +99,43 @@ def get_accounts_by_month():
         return jsonify(result), status
     except Exception:
         raise
+
+
+
+# 이번달 수입/지출 통계
+@app.route("/api/accounts/stats", methods=['GET'])
+def get_monthly_stats():
+    try:
+        token = request.headers.get('Authorization')
+        user_id = verify_token(token)
+        if not user_id:
+            return jsonify({'error': 'Authentication required.'}), 401
+
+        year = request.args.get('year', type=int)
+        month = request.args.get('month', type=int)
+        result, status = get_monthly_stats_logic(user_id, year, month)
+        return jsonify(result), status
+    except Exception:
+        raise
+
+
+
+# 최근 3개월 수입/지출 통계
+@app.route("/api/accounts/stats/recent", methods=['GET'])
+def get_recent_months_stats():
+    try:
+        token = request.headers.get('Authorization')
+        user_id = verify_token(token)
+        if not user_id:
+            return jsonify({'error': 'Authentication required.'}), 401
+
+        year = request.args.get('year', type=int)
+        month = request.args.get('month', type=int)
+        result, status = get_recent_months_stats_logic(user_id, year, month)
+        return jsonify(result), status
+    except Exception:
+        raise
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
