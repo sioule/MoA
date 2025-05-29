@@ -3,8 +3,8 @@ import './accounts.css';
 import Calendar from 'react-calendar';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const API_BASE = 'http://localhost:5002/api/accounts';       // GET (월별 내역)
-const API_POST_BASE = 'http://localhost:5002/api/account';   // POST, PUT, DELETE
+const API_BASE = 'http://localhost:5002/api/accounts';
+const API_POST_BASE = 'http://localhost:5002/api/account';
 
 const Accounts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +48,6 @@ const Accounts = () => {
   }, [selectedDate, token]);
 
   const handleModalOpen = () => setIsModalOpen(true);
-
   const handleModalClose = () => {
     setIsModalOpen(false);
     setNewTransaction({ date: '', description: '', amount: '', type: '지출' });
@@ -185,24 +184,27 @@ const Accounts = () => {
         </div>
       </div>
 
-      <div className="accounts-header" style={{ position: 'relative' }}>
+      <div className="accounts-header">
         <button className="arrow" onClick={handlePrevMonth} aria-label="이전 연도">{'<'}</button>
-        <h2 onClick={toggleCalendar}>
-          {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
-        </h2>
-        <button className="arrow" onClick={handleNextMonth} aria-label="다음 연도">{'>'}</button>
 
-        {showCalendar && (
-          <div className="calendar-container">
-            <Calendar
-              view="year"
-              onClickMonth={(value) => {
-                setSelectedDate(new Date(value));
-                setShowCalendar(false);
-              }}
-            />
-          </div>
-        )}
+        <div className="parent-of-calendar-container">
+          <h2 onClick={toggleCalendar}>
+            {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
+          </h2>
+          {showCalendar && (
+            <div className="calendar-container">
+              <Calendar
+                view="year"
+                onClickMonth={(value) => {
+                  setSelectedDate(new Date(value));
+                  setShowCalendar(false);
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        <button className="arrow" onClick={handleNextMonth} aria-label="다음 연도">{'>'}</button>
       </div>
 
       <div className="button-wrapper">
