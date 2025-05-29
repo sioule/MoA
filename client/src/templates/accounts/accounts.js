@@ -265,7 +265,7 @@ const Accounts = () => {
                   <span
                     className="transaction-delete"
                     onClick={() => {
-                      if (window.confirm('삭제하시겠습니까?')) {
+                      if (window.confirm('삭제 하시겠습니까?')) {
                         handleDelete(transaction.id);
                       }
                     }}

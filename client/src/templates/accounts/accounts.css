@@ -305,9 +305,9 @@
 
 .transaction-edit {
   color: #007bff;
-  margin-right: 12px;
+  margin-right: 5px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .transaction-edit:hover {
@@ -317,10 +317,22 @@
 .transaction-delete {
   color: #dc3545;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .transaction-delete:hover {
   text-decoration: underline;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px
 }
 
