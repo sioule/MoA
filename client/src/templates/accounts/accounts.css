@@ -300,3 +300,27 @@
   font-weight: bold;
   border-color: #FFE55C;
 } 
+
+
+
+.transaction-edit {
+  color: #007bff;
+  margin-right: 12px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.transaction-edit:hover {
+  text-decoration: underline;
+}
+
+.transaction-delete {
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.transaction-delete:hover {
+  text-decoration: underline;
+}
+
