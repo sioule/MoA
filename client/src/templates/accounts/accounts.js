@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './accounts.css';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import Calendar from 'react-calendar';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const API_BASE = 'http://localhost:5002/api/accounts'; // 백엔드 주소에 맞게 수정
+const API_BASE = 'http://localhost:5002/api/accounts';       // GET (월별 내역)
+const API_POST_BASE = 'http://localhost:5002/api/account';   // POST, PUT, DELETE
 
 const Accounts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [transactions, setTransactions] = useState([]); // 더미 데이터 제거!
+  const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({ date: '', description: '', amount: '', type: '지출' });
   const [filter, setFilter] = useState('all');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
 
-  // JWT 토큰 (로그인 후 localStorage에 저장되어 있다고 가정)
   const token = localStorage.getItem('token');
 
-  // 월별 데이터 백엔드에서 불러오기
   useEffect(() => {
     const fetchTransactions = async () => {
       const year = selectedDate.getFullYear();
@@ -49,7 +47,8 @@ const Accounts = () => {
     if (token) fetchTransactions();
   }, [selectedDate, token]);
 
-  const handleModalOpen = () => { setIsModalOpen(true); };
+  const handleModalOpen = () => setIsModalOpen(true);
+
   const handleModalClose = () => {
     setIsModalOpen(false);
     setNewTransaction({ date: '', description: '', amount: '', type: '지출' });
@@ -60,7 +59,6 @@ const Accounts = () => {
     setNewTransaction(prev => ({ ...prev, [name]: value }));
   };
 
-  // 추가 (POST)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -70,7 +68,7 @@ const Accounts = () => {
       cost: Math.abs(Number(newTransaction.amount))
     };
     try {
-      const res = await fetch(API_BASE, {
+      const res = await fetch(API_POST_BASE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +77,6 @@ const Accounts = () => {
         body: JSON.stringify(payload)
       });
       if (res.ok) {
-        // 등록 성공 시 월별 내역 새로고침
         const year = selectedDate.getFullYear();
         const month = selectedDate.getMonth() + 1;
         const refreshed = await fetch(`${API_BASE}?year=${year}&month=${month}`, {
@@ -107,10 +104,9 @@ const Accounts = () => {
     }
   };
 
-  // 삭제 (DELETE)
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`${API_BASE}/${id}`, {
+      const res = await fetch(`${API_POST_BASE}/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -122,7 +118,6 @@ const Accounts = () => {
     }
   };
 
-  // (옵션) 수정 기능 (PUT)
   const handleUpdate = async (id, updatedTransaction) => {
     const payload = {
       date: updatedTransaction.date.replace(/\./g, '-'),
@@ -131,7 +126,7 @@ const Accounts = () => {
       cost: Math.abs(Number(updatedTransaction.amount))
     };
     try {
-      const res = await fetch(`${API_BASE}/${id}`, {
+      const res = await fetch(`${API_POST_BASE}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -156,9 +151,7 @@ const Accounts = () => {
     }
   };
 
-  // 필터, 날짜, 달력 등 기존 로직 그대로
-  const handleFilterChange = (type) => { setFilter(type); };
-  const handleDateChange = (date) => { setSelectedDate(date); };
+  const handleFilterChange = (type) => setFilter(type);
   const handlePrevMonth = () => {
     const prevMonth = new Date(selectedDate.setMonth(selectedDate.getMonth() - 1));
     setSelectedDate(new Date(prevMonth));
@@ -167,7 +160,7 @@ const Accounts = () => {
     const nextMonth = new Date(selectedDate.setMonth(selectedDate.getMonth() + 1));
     setSelectedDate(new Date(nextMonth));
   };
-  const toggleCalendar = () => { setShowCalendar(!showCalendar); };
+  const toggleCalendar = () => setShowCalendar(!showCalendar);
 
   const filteredTransactions = transactions.filter(transaction => {
     if (filter === 'all') return true;
@@ -182,12 +175,9 @@ const Accounts = () => {
     );
   });
 
-
   return (
     <div className="accounts-container">
-
       <div className="profile-section">
-        {/* public/images/moa-fox.png는 이렇게 직접 접근 */}
         <img src="/images/moa-fox.png" alt="MoA Fox" className="profile-image" />
         <div className="level-info">
           <h2>Lv. {localStorage.getItem('level')}</h2>
@@ -195,72 +185,43 @@ const Accounts = () => {
         </div>
       </div>
 
-      
+      <div className="accounts-header" style={{ position: 'relative' }}>
+        <button className="arrow" onClick={handlePrevMonth} aria-label="이전 연도">{'<'}</button>
+        <h2 onClick={toggleCalendar}>
+          {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
+        </h2>
+        <button className="arrow" onClick={handleNextMonth} aria-label="다음 연도">{'>'}</button>
 
-  <div className="accounts-header" style={{ position: 'relative' }}>
-      <button 
-          className="arrow" 
-          onClick={handlePrevMonth}
-          aria-label="이전 연도"
-        >
-          {'<'}
-      </button>
-
-      <h2 onClick={toggleCalendar}>
-        {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
-      </h2>
-
-    <button 
-          className="arrow" 
-          onClick={handleNextMonth}
-          aria-label="다음 연도"
-          >
-            {'>'}
-    </button>
-
-      {showCalendar && (
-        <div className="calendar-container">
-          <Calendar
-            view="year"
-            onClickMonth={(value) => {
-              setSelectedDate(new Date(value));
-              setShowCalendar(false);
-            }}
-          />
-        </div>
-      )}
-    
+        {showCalendar && (
+          <div className="calendar-container">
+            <Calendar
+              view="year"
+              onClickMonth={(value) => {
+                setSelectedDate(new Date(value));
+                setShowCalendar(false);
+              }}
+            />
+          </div>
+        )}
       </div>
 
-
-  <div className="button-wrapper">
-     <button className="write-button" onClick={handleModalOpen}>
-         +
-      </button>
-  </div>
+      <div className="button-wrapper">
+        <button className="write-button" onClick={handleModalOpen}>+</button>
+      </div>
 
       <div className="transaction-list">
         <div className="transaction-header">
-          <span 
-            className={filter === 'all' ? 'active' : ''} 
-            onClick={() => handleFilterChange('all')}
-          >
-            전체 내역
-          </span>
-          <span 
-            className={filter === '수입' ? 'active' : ''} 
-            onClick={() => handleFilterChange('수입')}
-          >
-            수입
-          </span>
-          <span 
-            className={filter === '지출' ? 'active' : ''} 
-            onClick={() => handleFilterChange('지출')}
-          >
-            지출
-          </span>
+          {['all', '수입', '지출'].map(type => (
+            <span
+              key={type}
+              className={filter === type ? 'active' : ''}
+              onClick={() => handleFilterChange(type)}
+            >
+              {type === 'all' ? '전체 내역' : type}
+            </span>
+          ))}
         </div>
-  
+
         {filteredTransactionsByDate.length > 0 ? (
           filteredTransactionsByDate.map(transaction => (
             <div key={transaction.id} className="transaction-item">
@@ -274,11 +235,8 @@ const Accounts = () => {
             </div>
           ))
         ) : (
-          <div className="no-data-message">
-            데이터가 없습니다.
-          </div>
-          )}
-
+          <div className="no-data-message">데이터가 없습니다.</div>
+        )}
       </div>
 
       {isModalOpen && (
@@ -296,23 +254,19 @@ const Accounts = () => {
                   required
                 />
               </div>
-            <div className="form-group">
+              <div className="form-group">
                 <label>내용</label>
                 <div className="type-toggle">
                   <button
                     type="button"
                     className={newTransaction.type === '수입' ? 'active' : ''}
                     onClick={() => setNewTransaction(prev => ({ ...prev, type: '수입' }))}
-                  >
-                    수입
-                  </button>
+                  >수입</button>
                   <button
                     type="button"
                     className={newTransaction.type === '지출' ? 'active' : ''}
                     onClick={() => setNewTransaction(prev => ({ ...prev, type: '지출' }))}
-                  >
-                    지출
-                  </button>
+                  >지출</button>
                 </div>
                 <input
                   type="text"
@@ -322,7 +276,6 @@ const Accounts = () => {
                   required
                 />
               </div>
-
               <div className="form-group">
                 <label>금액</label>
                 <input
@@ -333,7 +286,6 @@ const Accounts = () => {
                   required
                 />
               </div>
-
               <div className="modal-buttons">
                 <button type="submit">저장</button>
                 <button type="button" onClick={handleModalClose}>취소</button>
