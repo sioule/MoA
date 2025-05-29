@@ -196,7 +196,8 @@ const Accounts = () => {
       </div>
 
       
-      <div className="accounts-header" style={{ position: 'relative' }}>
+
+  <div className="accounts-header" style={{ position: 'relative' }}>
       <button 
           className="arrow" 
           onClick={handlePrevMonth}
@@ -205,38 +206,38 @@ const Accounts = () => {
           {'<'}
       </button>
 
-    <h2 onClick={toggleCalendar}>
-      {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
-    </h2>
+      <h2 onClick={toggleCalendar}>
+        {selectedDate.getFullYear()}년 {selectedDate.getMonth() + 1}월
+      </h2>
 
-   <button 
-        className="arrow" 
-        onClick={handleNextMonth}
-        aria-label="다음 연도"
-        >
-          {'>'}
-   </button>
+    <button 
+          className="arrow" 
+          onClick={handleNextMonth}
+          aria-label="다음 연도"
+          >
+            {'>'}
+    </button>
 
-
-    {showCalendar && (
-      <div className="calendar-container">
-        <Calendar
-          view="year"
-          onClickMonth={(value) => {
-            setSelectedDate(new Date(value));
-            setShowCalendar(false);
-          }}
-        />
+      {showCalendar && (
+        <div className="calendar-container">
+          <Calendar
+            view="year"
+            onClickMonth={(value) => {
+              setSelectedDate(new Date(value));
+              setShowCalendar(false);
+            }}
+          />
+        </div>
+      )}
+    
       </div>
-    )}
-  
-</div>
 
-<div className="button-wrapper">
-      <button className="write-button" onClick={handleModalOpen}>
-            +
-        </button>
-    </div>
+
+  <div className="button-wrapper">
+     <button className="write-button" onClick={handleModalOpen}>
+         +
+      </button>
+  </div>
 
       <div className="transaction-list">
         <div className="transaction-header">
@@ -295,10 +296,7 @@ const Accounts = () => {
                   required
                 />
               </div>
-              <div className="form-group">
-              <div className="form-group">
-
-              </div>
+            <div className="form-group">
                 <label>내용</label>
                 <div className="type-toggle">
                   <button
@@ -324,6 +322,7 @@ const Accounts = () => {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label>금액</label>
                 <input
