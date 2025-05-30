@@ -21,6 +21,7 @@ const Accounts = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());  // 선택된 기준 월
   const [showCalendar, setShowCalendar] = useState(false);       // 연도 달력 표시 여부
   const [editId, setEditId] = useState(null);                    // 수정 대상 거래 ID (없으면 새 작성)
+  const [isLoading, setIsLoading] = useState(false);             // 🔄 로딩 상태
 
   const token = localStorage.getItem('token'); // 인증 토큰 가져오기
 
@@ -30,6 +31,8 @@ const Accounts = () => {
       const year = selectedDate.getFullYear();
       const month = selectedDate.getMonth() + 1;
 
+      setIsLoading(true);  // 🔄 로딩 시작
+
       try {
         const res = await fetch(`${API_BASE}?year=${year}&month=${month}`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -37,6 +40,7 @@ const Accounts = () => {
 
         if (!res.ok) {
           setTransactions([]);
+          setIsLoading(false); // 🔄 로딩 끝
           return;
         }
 
@@ -57,6 +61,8 @@ const Accounts = () => {
       } catch (err) {
         setTransactions([]);
       }
+
+      setIsLoading(false); // 🔄 로딩 끝
     };
 
     if (token) fetchTransactions();
@@ -249,7 +255,10 @@ const Accounts = () => {
           ))}
         </div>
 
-        {filteredTransactionsByDate.length > 0 ? (
+        {/* 🔽 로딩/데이터 없음/데이터 있음 분기 */}
+        {isLoading ? (
+          <div className="no-data-message">...로딩 중</div>  // 🔄 로딩 중 표시
+        ) : filteredTransactionsByDate.length > 0 ? (
           filteredTransactionsByDate.map(transaction => (
             <div key={transaction.id} className="transaction-item">
               <div className="transaction-info">
