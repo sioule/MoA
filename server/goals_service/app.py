@@ -7,20 +7,29 @@ import jwt
 import os
 from dotenv import load_dotenv
 import json
+from goalService import (
+    get_monthly_goals_logic,
+    save_objectives_logic,
+    get_objectives_logic,
+    get_yearly_goals_logic
+)
 
-# 환경 변수 로드
-load_dotenv()
+# .env 파일 명시적으로 로드 (server/.env)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__)
 CORS(app)
 
 # 환경 변수에서 설정 로드
 SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
-DB_HOST = os.getenv('DB_HOST', '34.22.105.79')
-DB_USER = os.getenv('DB_USER', 'minjis')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'cloud')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_USER = os.getenv('DB_USER', 'root')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '')
 DB_NAME = os.getenv('DB_NAME', 'moa_db')
 PORT = int(os.getenv('PORT', 5003))
+
 
 # 데이터베이스 연결 설정
 def get_db_connection():
@@ -457,33 +466,12 @@ def get_goal_progress(goal_id):
 # 한 달에 한 번만 목표 등록 (중복 방지)
 @app.route('/api/goals/monthly', methods=['POST'])
 def create_monthly_goal():
-    data = request.get_json()
-    user_id = data.get('user_id')
-    year = data.get('year')
-    month = data.get('month')
-    budget = data.get('budget')
-    objective = data.get('objective', '')
-    if not all([user_id, year, month, budget]):
-        return jsonify({'error': '필수 항목 누락'}), 400
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        'SELECT id FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
-        (user_id, year, month)
-    )
-    if cursor.fetchone():
-        cursor.close()
-        conn.close()
-        return jsonify({'error': '이미 해당 달에 목표가 존재합니다.'}), 400
-    cursor.execute(
-        'INSERT INTO Goal (user_id, year, month, budget, objective) VALUES (%s, %s, %s, %s, %s)',
-        (user_id, year, month, budget, objective)
-    )
-    conn.commit()
-    goal_id = cursor.lastrowid
-    cursor.close()
-    conn.close()
-    return jsonify({'goal_id': goal_id}), 201
+    try:
+        data = request.get_json()
+        result, status = create_monthly_goal_logic(data)
+        return jsonify(result), status
+    except Exception:
+        raise
 
 # 목표 및 달성 현황 조회 (그래프용)
 @app.route('/api/goals/summary', methods=['GET'])
@@ -539,113 +527,46 @@ def yearly_summary():
 # 한 달에 한 번만 목표 등록 (중복 방지)
 @app.route('/api/goals/monthly-list', methods=['GET'])
 def get_monthly_goals():
-    user_id = request.args.get('user_id')
-    year = request.args.get('year')
-    month = request.args.get('month')
-    if not all([user_id, year, month]):
-        return jsonify({'error': '필수 항목 누락'}), 400
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        'SELECT * FROM Goal WHERE user_id=%s AND year=%s AND month=%s LIMIT 3',
-        (user_id, year, month)
-    )
-    goals = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(goals)
+    try:
+        user_id = request.args.get('user_id')
+        year = request.args.get('year')
+        month = request.args.get('month')
+        result, status = get_monthly_goals_logic(user_id, year, month)
+        return jsonify(result), status
+    except Exception:
+        raise
 
 # 이달의 목표(최대 3개) 저장 (Goal 테이블의 objective 컬럼 사용)
 @app.route('/api/goals/objectives', methods=['POST'])
 def save_objectives():
-    data = request.get_json()
-    user_id = data.get('user_id')
-    year = data.get('year')
-    month = data.get('month')
-    objectives = data.get('objectives', [])
-    if not all([user_id, year, month, objectives]):
-        return jsonify({'error': '필수 항목 누락'}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    # 해당 월 Goal row가 있는지 확인
-    cursor.execute(
-        'SELECT id FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
-        (user_id, year, month)
-    )
-    row = cursor.fetchone()
-    if row:
-        # objective 컬럼만 업데이트 (JSON 문자열로 저장)
-        cursor.execute(
-            'UPDATE Goal SET objective=%s WHERE user_id=%s AND year=%s AND month=%s',
-            (json.dumps(objectives[:3], ensure_ascii=False), user_id, year, month)
-        )
-    else:
-        # 없으면 새로 생성 (budget은 0, objective만 저장)
-        cursor.execute(
-            'INSERT INTO Goal (user_id, year, month, budget, objective) VALUES (%s, %s, %s, %s, %s)',
-            (user_id, year, month, 0, json.dumps(objectives[:3], ensure_ascii=False))
-        )
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({'message': '목표가 저장되었습니다.'}), 201
+    try:
+        data = request.get_json()
+        result, status = save_objectives_logic(data)
+        return jsonify(result), status
+    except Exception:
+        raise
 
 # 이달의 목표(최대 3개) 조회 (Goal 테이블의 objective 컬럼 사용)
 @app.route('/api/goals/objectives/<int:user_id>', methods=['GET'])
 def get_objectives(user_id):
-    year = request.args.get('year')
-    month = request.args.get('month')
-    if not all([user_id, year, month]):
-        return jsonify({'error': '필수 항목 누락'}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        'SELECT objective FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
-        (user_id, year, month)
-    )
-    row = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    # objective 컬럼이 비어있으면 빈 배열 반환
-    if row and row['objective']:
-        try:
-            objectives = json.loads(row['objective'])
-        except Exception:
-            objectives = []
-    else:
-        objectives = []
-    # 프론트엔드에서 기대하는 형태로 반환
-    return jsonify([{'objective': obj} for obj in objectives])
+    try:
+        year = request.args.get('year')
+        month = request.args.get('month')
+        result, status = get_objectives_logic(user_id, year, month)
+        return jsonify(result), status
+    except Exception:
+        raise
 
 # 연도별 월별 목표금액 조회
 @app.route('/api/goals/yearly', methods=['GET'])
 def get_yearly_goals():
-    user_id = request.args.get('user_id')
-    year = request.args.get('year')
-    if not user_id or not year:
-        return jsonify({'error': '필수 항목 누락'}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        'SELECT month, budget FROM Goal WHERE user_id=%s AND year=%s',
-        (user_id, year)
-    )
-    rows = cursor.fetchall()
-    cursor.close()
-    conn.close()
-
-    # 월별로 1~12월 모두 반환 (목표 없는 달은 budget=0)
-    result = []
-    month_budget = {row['month']: row['budget'] for row in rows}
-    for m in range(1, 13):
-        result.append({
-            'month': m,
-            'budget': month_budget.get(m, 0)
-        })
-    return jsonify(result)
+    try:
+        user_id = request.args.get('user_id')
+        year = request.args.get('year')
+        result, status = get_yearly_goals_logic(user_id, year)
+        return jsonify(result), status
+    except Exception:
+        raise
 
 if __name__ == "__main__":
     app.run(debug=True, port=PORT) 
