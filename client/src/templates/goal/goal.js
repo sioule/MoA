@@ -48,11 +48,11 @@ const Goal = () => {
         `/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
       );
       const data = await response.json();
-      setSelectedMonthData({
-        목표금액: data.budget,
+        setSelectedMonthData({
+          목표금액: data.budget,
         사용금액: data.total_spent || 0,
         달성성공: (data.total_spent || 0) <= data.budget
-      });
+        });
     } catch (error) {
       console.error('목표 조회 실패:', error);
     }
@@ -158,7 +158,7 @@ const Goal = () => {
   // 목표 입력창 추가 (최대 3개)
   const addObjectiveInput = () => {
     if (objectiveInputs.length < 3) {
-      setObjectiveInputs([...objectiveInputs, '']);
+    setObjectiveInputs([...objectiveInputs, '']);
     }
   };
 
@@ -320,7 +320,7 @@ const Goal = () => {
                       />
                       {/* + 버튼 */}
                       {index === objectiveInputs.length - 1 && objectiveInputs.length < 3 && (
-                        <button
+                        <button 
                           className="add-more-button"
                           onClick={addObjectiveInput}
                           style={{ marginLeft: '4px', fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#444' }}
@@ -330,13 +330,13 @@ const Goal = () => {
                   ))}
                   {/* 완료/취소 버튼 */}
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
-                    <button
-                      className="save-button"
-                      onClick={handleObjectiveSubmit}
+                  <button 
+                    className="save-button"
+                    onClick={handleObjectiveSubmit}
                       style={{ minWidth: '120px' }}
-                    >
-                      완료
-                    </button>
+                  >
+                    완료
+                  </button>
                   </div>
                 </div>
               ) : (

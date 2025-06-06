@@ -8,18 +8,19 @@ import os
 from dotenv import load_dotenv
 import json
 
-# 환경 변수 로드
-load_dotenv()
+# .env 파일 로드 (server/.env)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+env_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__)
 CORS(app)
 
-# 환경 변수에서 설정 로드
-SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
-DB_HOST = os.getenv('DB_HOST', '34.22.105.79')
-DB_USER = os.getenv('DB_USER', 'minjis')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'cloud')
-DB_NAME = os.getenv('DB_NAME', 'moa_db')
+SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+DB_HOST = os.getenv('DB_HOST')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_NAME = os.getenv('DB_NAME')
 PORT = int(os.getenv('PORT', 5003))
 
 # 데이터베이스 연결 설정
@@ -466,6 +467,8 @@ def create_monthly_goal():
     if not all([user_id, year, month, budget]):
         return jsonify({'error': '필수 항목 누락'}), 400
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor()
     cursor.execute(
         'SELECT id FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
@@ -494,6 +497,8 @@ def goal_summary():
     if not all([user_id, year, month]):
         return jsonify({'error': '필수 항목 누락'}), 400
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor(dictionary=True)
     cursor.execute(
         'SELECT budget FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
@@ -520,6 +525,8 @@ def yearly_summary():
     if not all([user_id, year]):
         return jsonify({'error': '필수 항목 누락'}), 400
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor(dictionary=True)
     cursor.execute(
         '''
@@ -545,6 +552,8 @@ def get_monthly_goals():
     if not all([user_id, year, month]):
         return jsonify({'error': '필수 항목 누락'}), 400
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor(dictionary=True)
     cursor.execute(
         'SELECT * FROM Goal WHERE user_id=%s AND year=%s AND month=%s LIMIT 3',
@@ -567,6 +576,8 @@ def save_objectives():
         return jsonify({'error': '필수 항목 누락'}), 400
 
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor()
     # 해당 월 Goal row가 있는지 확인
     cursor.execute(
@@ -600,6 +611,8 @@ def get_objectives(user_id):
         return jsonify({'error': '필수 항목 누락'}), 400
 
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor(dictionary=True)
     cursor.execute(
         'SELECT objective FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
@@ -628,6 +641,8 @@ def get_yearly_goals():
         return jsonify({'error': '필수 항목 누락'}), 400
 
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor(dictionary=True)
     cursor.execute(
         'SELECT month, budget FROM Goal WHERE user_id=%s AND year=%s',
@@ -653,6 +668,8 @@ def get_user_level():
     if not user_id:
         return jsonify({'error': 'user_id 필요'}), 400
     conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': '데이터베이스 연결 실패'}), 500
     cursor = conn.cursor(dictionary=True)
     cursor.execute('SELECT level, exp FROM User WHERE user_id=%s', (user_id,))
     user = cursor.fetchone()
@@ -677,6 +694,9 @@ def get_user_level():
 
 def add_exp(user_id, amount):
     conn = get_db_connection()
+    if not conn:
+        print('데이터베이스 연결 실패')
+        return
     cursor = conn.cursor(dictionary=True)
     # 현재 레벨/경험치 조회
     cursor.execute('SELECT level, exp FROM User WHERE id=%s', (user_id,))
@@ -698,6 +718,9 @@ def add_exp(user_id, amount):
 
 def update_level_on_goal_complete(user_id):
     conn = get_db_connection()
+    if not conn:
+        print('데이터베이스 연결 실패')
+        return
     cursor = conn.cursor(dictionary=True)
     cursor.execute('SELECT exp, level FROM User WHERE user_id=%s', (user_id,))
     user = cursor.fetchone()
@@ -718,4 +741,4 @@ def update_level_on_goal_complete(user_id):
     conn.close()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=PORT) 
+    app.run(debug=True, port=5003) 
