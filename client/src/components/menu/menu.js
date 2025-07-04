@@ -35,6 +35,9 @@ const Menu = ({ onLogout }) => {
         <button onClick={() => navigate('/goal')} className="menu-button">
           목표달성
         </button>
+        <button onClick={() => navigate('/rankings')} className="menu-button">
+          명예의 전당
+        </button>
         <button onClick={handleLogout} className="menu-button">
           로그아웃
         </button>
