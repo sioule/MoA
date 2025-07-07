@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './goal.css';
 import YearlyStats from './YearlyStats';
+import axios from 'axios';
 
 const Goal = () => {
   const [targetAmount, setTargetAmount] = useState('');
@@ -20,8 +21,25 @@ const Goal = () => {
   const [monthlyGoals, setMonthlyGoals] = useState([]);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // 레벨/경험치 상태
+  const [levelInfo, setLevelInfo] = useState({ level: 1, exp: 0, next_exp: 1, progress: 0 });
+
   const userId = localStorage.getItem('user_id');
   const token = localStorage.getItem('token');
+
+  // 레벨/경험치 정보 불러오기
+  useEffect(() => {
+    async function fetchLevel() {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`http://localhost:5003/api/user/level?user_id=${userId}`);
+        setLevelInfo(res.data);
+      } catch (e) {
+        // 무시
+      }
+    }
+    fetchLevel();
+  }, [userId]);
 
   // 현재 월의 목표 데이터 조회 (summary API 사용)
   const fetchGoalData = async () => {
@@ -30,11 +48,11 @@ const Goal = () => {
         `/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
       );
       const data = await response.json();
-      setSelectedMonthData({
-        목표금액: data.budget,
+        setSelectedMonthData({
+          목표금액: data.budget,
         사용금액: data.total_spent || 0,
         달성성공: (data.total_spent || 0) <= data.budget
-      });
+        });
     } catch (error) {
       console.error('목표 조회 실패:', error);
     }
@@ -140,7 +158,7 @@ const Goal = () => {
   // 목표 입력창 추가 (최대 3개)
   const addObjectiveInput = () => {
     if (objectiveInputs.length < 3) {
-      setObjectiveInputs([...objectiveInputs, '']);
+    setObjectiveInputs([...objectiveInputs, '']);
     }
   };
 
@@ -180,15 +198,82 @@ const Goal = () => {
     }
   };
 
+  // 목표 입력창 삭제 함수 추가
+  const removeObjectiveInput = (index) => {
+    if (objectiveInputs.length === 1) return;
+    setObjectiveInputs(inputs => inputs.filter((_, i) => i !== index));
+  };
+
+  // 연필 버튼 클릭 핸들러
+  const handleEditObjectives = () => {
+    setIsAddingObjectives(true);
+    if (objectives.length > 0) {
+      setObjectiveInputs(objectives.map(obj => obj.objective || obj));
+    } else {
+      setObjectiveInputs(['']);
+    }
+  };
+
   return (
     <div className="goal-container">
       <div className="goal-card">
         {/* 왼쪽 섹션 */}
         <div className="goal-profile-section">
           <img src="/images/moa-fox.png" alt="MoA Fox" className="goal-profile-image" />
-          <div className="goal-level-info">
-            <h2>Lv. 3</h2>
-            <p>
+          <div className="goal-level-info" style={{ textAlign: 'center' }}>
+            <h2>Lv. {levelInfo.level}</h2>
+            <div
+              className="level-bar-container"
+              style={{
+                margin: '12px auto 10px auto',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: 240
+              }}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  height: 19,
+                  background: '#ffcccc',
+                  borderRadius: 9.5,
+                  overflow: 'hidden',
+                  margin: '0 auto',
+                  position: 'relative'
+                }}
+              >
+                <div
+                  style={{
+                    width: `${levelInfo.progress}%`,
+                    height: '100%',
+                    background: '#c0392b',
+                    borderRadius: 9.5,
+                    transition: 'width 0.5s',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    zIndex: 1
+                  }}
+                />
+                <div style={{
+                  position: 'relative',
+                  zIndex: 2,
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 16,
+                  color: '#fff',
+                  fontWeight: 600,
+                  lineHeight: 1
+                }}>
+                  {levelInfo.progress}%
+                </div>
+              </div>
+            </div>
+            <p style={{ marginTop: 10 }}>
               <span style={{ color: '#555', fontWeight: 'bold' }}>
                 {localStorage.getItem('nickname')}
               </span>
@@ -197,28 +282,34 @@ const Goal = () => {
                 ({localStorage.getItem('email')})
               </span>
             </p>
-            <div className="level-bar-container">
-              <div className="level-bar-segments"></div>
-              <div className="level-bar-divider"></div>
-              <div className="level-bar-divider"></div>
-            </div>
             {/* 이달의 목표 섹션 추가 */}
             <div className="monthly-objective-section">
               <div className="objective-header">
                 <h3>이달의 목표</h3>
                 <button 
                   className="edit-button"
-                  onClick={() => setIsAddingObjectives(!isAddingObjectives)}
+                  onClick={handleEditObjectives}
+                  title="목표 추가/수정"
+                  style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                   disabled={isAddingObjectives && objectiveInputs.length >= 3}
                 >
-                  {isAddingObjectives ? '취소' : '추가'}
+                  {/* 주황색 연필 SVG 아이콘 */}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFA500" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21v-3.75a2 2 0 0 1 .586-1.414l11.25-11.25a2 2 0 0 1 2.828 0l1.75 1.75a2 2 0 0 1 0 2.828l-11.25 11.25A2 2 0 0 1 6.75 21H3z"/><path d="M15 6l3 3"/></svg>
                 </button>
               </div>
-              {/* 입력창, 추가 버튼, 완료 버튼 */}
+              {/* 입력창, 추가/삭제/완료/취소 버튼 */}
               {isAddingObjectives ? (
                 <div className="objective-inputs-container">
                   {objectiveInputs.map((input, index) => (
                     <div key={index} className="objective-input-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {/* - 버튼 */}
+                      <button
+                        className="remove-button"
+                        onClick={() => removeObjectiveInput(index)}
+                        disabled={objectiveInputs.length === 1}
+                        style={{ marginRight: '4px', fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      >-</button>
+                      {/* 입력창 */}
                       <input
                         type="text"
                         value={input}
@@ -227,26 +318,25 @@ const Goal = () => {
                         maxLength={50}
                         style={{ flex: 1 }}
                       />
+                      {/* + 버튼 */}
                       {index === objectiveInputs.length - 1 && objectiveInputs.length < 3 && (
-                        <button
+                        <button 
                           className="add-more-button"
                           onClick={addObjectiveInput}
-                          disabled={objectiveInputs.length >= 3}
-                          style={{ marginLeft: '4px' }}
-                        >
-                          +
-                        </button>
+                          style={{ marginLeft: '4px', fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#444' }}
+                        >+</button>
                       )}
                     </div>
                   ))}
+                  {/* 완료/취소 버튼 */}
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
-                    <button
-                      className="save-button"
-                      onClick={handleObjectiveSubmit}
+                  <button 
+                    className="save-button"
+                    onClick={handleObjectiveSubmit}
                       style={{ minWidth: '120px' }}
-                    >
-                      완료
-                    </button>
+                  >
+                    완료
+                  </button>
                   </div>
                 </div>
               ) : (

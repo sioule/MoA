@@ -4,6 +4,7 @@ import Login from './templates/login/Login';
 import Register from './templates/register/Register';
 import Menu from './components/menu/menu';
 import Goal from './templates/goal/goal';
+import Rankings from './templates/lankings/Rankings';
 import Accounts from './templates/accounts/accounts';
 import Statistics from './templates/statistics/Statistics';
 import './App.css';
@@ -30,6 +31,7 @@ function App() {
             <Route path="/account-book" element={<Accounts />} />
             <Route path="/statistics/*" element={<Statistics />} />
             <Route path="/goal" element={<Goal />} />
+            <Route path="/rankings" element={<Rankings />} />
           </Routes>
         </div>
       </div>
