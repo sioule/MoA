@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './accounts.css';
 import Calendar from 'react-calendar';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
 
 // 🔽 API 엔드포인트 정의
 const API_BASE = 'http://localhost:5002/api/accounts';       // 월별 가계부 조회 (GET)
@@ -23,7 +24,25 @@ const Accounts = () => {
   const [editId, setEditId] = useState(null);                    // 수정 대상 거래 ID (없으면 새 작성)
   const [isLoading, setIsLoading] = useState(false);             // 🔄 로딩 상태
 
+  // 레벨/경험치 상태 (목표달성 페이지와 동일)
+  const [levelInfo, setLevelInfo] = useState({ level: 1, exp: 0, next_exp: 1, progress: 0 });
+  const userId = localStorage.getItem('user_id');
+
   const token = localStorage.getItem('token'); // 인증 토큰 가져오기
+
+  // 레벨 정보 불러오기 (목표달성 페이지와 동일)
+  useEffect(() => {
+    async function fetchLevel() {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`http://localhost:5003/api/user/level?user_id=${userId}`);
+        setLevelInfo(res.data);
+      } catch (e) {
+        // 무시
+      }
+    }
+    fetchLevel();
+  }, [userId]);
 
   // 🔽 월별 거래 내역 조회 (선택 월 변경 시마다 실행)
   useEffect(() => {
@@ -207,7 +226,7 @@ const Accounts = () => {
       <div className="profile-section">
         <img src="/images/moa-fox.png" alt="MoA Fox" className="profile-image" />
         <div className="level-info">
-          <h2>Lv. {localStorage.getItem('level')}</h2>
+          <h2>Lv. {levelInfo.level}</h2>
           <p>{localStorage.getItem('nickname')} ({localStorage.getItem('email')})</p>
         </div>
       </div>

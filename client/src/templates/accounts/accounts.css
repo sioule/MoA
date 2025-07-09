@@ -202,6 +202,11 @@
   }
 
   /* 달력 스타일 */
+  .parent-of-calendar-container {
+    position: relative;
+    display: inline-block;
+  }
+  
   .calendar-container {
     position: absolute;
     top: 100%; /* 부모 요소 기준으로 아래에 위치 */
@@ -236,4 +241,98 @@
     background-color: #FFE55C;
     color: white;
   }
+
+
+.no-data-message {
+  padding: 30px;
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+}
+
+  /* 좌우 화살표만 hover 효과 유지 */
+  .react-calendar__navigation__arrow {
+    cursor: pointer !important;
+  }
+  
+  .react-calendar__navigation__arrow:hover {
+    background-color: rgba(248, 218, 0, 0.2) !important;
+    color: #333 !important;
+  } 
+
+
+  
+.type-toggle {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.type-toggle button {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.2s, color 0.2s;
+    /* 아래 두 줄 추가 */
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.type-toggle button:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.type-toggle button:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-left: none;
+}
+
+.type-toggle button.active {
+  background: #FFE55C;
+  color: #fff;
+  font-weight: bold;
+  border-color: #FFE55C;
+} 
+
+
+
+.transaction-edit {
+  color: #007bff;
+  margin-right: 5px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.transaction-edit:hover {
+  text-decoration: underline;
+}
+
+.transaction-delete {
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.transaction-delete:hover {
+  text-decoration: underline;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px
+}
 
