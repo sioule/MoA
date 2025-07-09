@@ -56,10 +56,10 @@ const Login = ({ setIsLoggedIn }) => {
       </div>
       <div className="login-section">
         <div className="login-content">
-          <img
-            src={process.env.PUBLIC_URL + '/images/moa-logo-b.png'}
-            alt="MoA Logo"
-            className="login-logo"
+          <img 
+            src={process.env.PUBLIC_URL + '/images/moa-logo-b.png'} 
+            alt="MoA Logo" 
+            className="login-logo" 
           />
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
@@ -100,7 +100,7 @@ const Login = ({ setIsLoggedIn }) => {
               </button>
             </div>
             <button className="login-button" type="submit">로그인</button>
-            <button
+            <button 
               className="register-button"
               type="button"
               onClick={() => navigate('/register')}
@@ -115,4 +115,4 @@ const Login = ({ setIsLoggedIn }) => {
   );
 };
 
-export default Login;
+export default Login; 

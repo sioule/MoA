@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+   import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   auth: {
@@ -7,17 +7,17 @@ const initialState = {
     error: null
   },
   accounts: {
-    monthlyStats: {},
-    quarterlyStats: {},
+       monthlyStats: {},
+       quarterlyStats: {},
     loading: false,
     error: null
   },
   goals: {
     yearlyGoals: [],
     objectives: [],
-    loading: false,
-    error: null
-  },
+       loading: false,
+       error: null
+     },
   statistics: {
     data: {},
     loading: false,
@@ -28,7 +28,7 @@ const initialState = {
 const appSlice = createSlice({
   name: 'app',
   initialState,
-  reducers: {
+     reducers: {
     // Auth actions
     setUser: (state, action) => {
       state.auth.user = action.payload;
