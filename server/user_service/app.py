@@ -90,6 +90,9 @@ def login():
 # 토큰 인증 예시
 def verify_token(token):
     try:
+        # "Bearer " 접두사 제거
+        if token and token.lower().startswith('bearer '):
+            token = token.split()[1]
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         return payload['user_id']
     except Exception:

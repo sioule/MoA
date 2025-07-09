@@ -48,13 +48,10 @@ const Goal = () => {
         `/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
       );
       const data = await response.json();
-        setSelectedMonthData({
-          목표금액: data.budget,
-        사용금액: data.total_spent || 0,
-        달성성공: (data.total_spent || 0) <= data.budget
-        });
+      return data;
     } catch (error) {
       console.error('목표 조회 실패:', error);
+      return null;
     }
   };
 
@@ -74,7 +71,7 @@ const Goal = () => {
     }
   };
 
-  // 이달의 목표 3개만 조회
+  // 이달의 목표 3개만 조회 및 budget 보정
   const fetchMonthlyGoals = async () => {
     try {
       const response = await fetch(
@@ -82,15 +79,35 @@ const Goal = () => {
       );
       const data = await response.json();
       setMonthlyGoals(data);
+      return data;
     } catch (error) {
       console.error('이달의 목표 조회 실패:', error);
+      return null;
     }
   };
 
   useEffect(() => {
-    fetchGoalData();
-    fetchObjectives();
-    fetchMonthlyGoals();
+    // summary와 monthly-list를 모두 조회해서 budget이 0이거나 undefined면 monthly-list의 budget을 사용
+    const fetchAll = async () => {
+      const summary = await fetchGoalData();
+      const monthlyList = await fetchMonthlyGoals();
+      await fetchObjectives();
+      let budget = summary && summary.budget ? summary.budget : 0;
+      let spent = summary && summary.total_spent ? summary.total_spent : 0;
+      // summary의 budget이 0이거나 undefined면 monthly-list에서 보정
+      if ((!budget || budget === 0) && Array.isArray(monthlyList) && monthlyList.length > 0 && monthlyList[0].budget > 0) {
+        budget = monthlyList[0].budget;
+      }
+      setSelectedMonthData({
+        목표금액: budget,
+        사용금액: spent,
+        달성성공: spent <= budget
+      });
+      console.log('summary:', summary);
+      console.log('monthlyList:', monthlyList);
+      console.log('최종 budget:', budget, typeof budget);
+    };
+    fetchAll();
     // eslint-disable-next-line
   }, [selectedMonth, selectedYear]);
 
@@ -362,26 +379,7 @@ const Goal = () => {
           <div className="goal-content-box">
             <h3>이번달 목표 금액</h3>
             <div className="goal-input-wrapper">
-              {!selectedMonthData.목표금액 ? (
-                <div className="goal-input-container">
-                  <span className="goal-won-symbol">₩</span>
-                  <input
-                    type="text"
-                    value={targetAmount}
-                    onChange={handleAmountChange}
-                    onKeyPress={handleKeyPress}
-                    placeholder="목표액을 입력해주세요"
-                    className={`goal-amount-input ${isError ? 'error' : ''}`}
-                  />
-                  <button 
-                    type="button" 
-                    className="goal-input-button"
-                    onClick={handleSubmit}
-                  >
-                    입력하기
-                  </button>
-                </div>
-              ) : (
+              {Number(selectedMonthData.목표금액) > 0 ? (
                 <div className="goal-amount-display">
                   {/* 기본 진행도 */}
                   <div 
@@ -400,8 +398,27 @@ const Goal = () => {
                     />
                   )}
                   <span className="goal-amount-text">
-                    ₩ {selectedMonthData.목표금액.toLocaleString()}
+                    ₩ {Number(selectedMonthData.목표금액).toLocaleString()}
                   </span>
+                </div>
+              ) : (
+                <div className="goal-input-container">
+                  <span className="goal-won-symbol">₩</span>
+                  <input
+                    type="text"
+                    value={targetAmount}
+                    onChange={handleAmountChange}
+                    onKeyPress={handleKeyPress}
+                    placeholder="목표액을 입력해주세요"
+                    className={`goal-amount-input ${isError ? 'error' : ''}`}
+                  />
+                  <button 
+                    type="button" 
+                    className="goal-input-button"
+                    onClick={handleSubmit}
+                  >
+                    입력하기
+                  </button>
                 </div>
               )}
               {isError && <p className="goal-error-message">{errorMsg}</p>}
