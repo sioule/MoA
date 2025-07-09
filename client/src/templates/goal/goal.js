@@ -9,9 +9,6 @@ const Goal = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonthData, setSelectedMonthData] = useState({
-    목표금액: 0,
-    사용금액: 0,
-    달성성공: false
   });
   const [monthlyObjective, setMonthlyObjective] = useState('');
   const [isEditingObjective, setIsEditingObjective] = useState(false);
