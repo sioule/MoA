@@ -491,8 +491,8 @@ def goal_summary():
     )
     goal = cursor.fetchone()
     cursor.execute(
-        'SELECT SUM(cost) as total_spent FROM Account WHERE user_id=%s AND YEAR(date)=%s AND MONTH(date)=%s',
-        (user_id, year, month)
+        'SELECT SUM(cost) as total_spent FROM Account WHERE user_id=%s AND YEAR(date)=%s AND MONTH(date)=%s AND type=%s',
+        (user_id, year, month, '지출')
     )
     spent = cursor.fetchone()
     cursor.close()
@@ -517,11 +517,11 @@ def yearly_summary():
         '''
         SELECT MONTH(date) as month, SUM(cost) as total_spent
         FROM Account
-        WHERE user_id=%s AND YEAR(date)=%s
+        WHERE user_id=%s AND YEAR(date)=%s AND type=%s
         GROUP BY MONTH(date)
         ORDER BY month
         ''',
-        (user_id, year)
+        (user_id, year, '지출')
     )
     data = cursor.fetchall()
     cursor.close()
