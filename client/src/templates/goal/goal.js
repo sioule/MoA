@@ -29,7 +29,7 @@ const Goal = () => {
     async function fetchLevel() {
       if (!userId) return;
       try {
-        const res = await axios.get(`http://localhost:5003/api/user/level?user_id=${userId}`);
+        const res = await axios.get(`/api/user/level?user_id=${userId}`);
         setLevelInfo(res.data);
       } catch (e) {
         // 무시
