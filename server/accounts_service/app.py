@@ -137,7 +137,6 @@ def get_recent_months_stats():
         raise
 
 
-
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
 
