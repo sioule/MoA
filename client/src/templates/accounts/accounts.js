@@ -39,7 +39,7 @@ const Accounts = () => {
     async function fetchProfile() {
       try {
         if (!token) return;
-        const res = await fetch('/api/auth/me', {
+        const res = await fetch('http://localhost:5001/api/auth/me', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
