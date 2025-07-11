@@ -8,7 +8,10 @@ import axios from 'axios';
 const API_BASE = 'http://localhost:5002/api/accounts';       // 월별 가계부 조회 (GET)
 const API_POST_BASE = 'http://localhost:5002/api/account';   // 가계부 생성 (POST), 수정 (PUT), 삭제 (DELETE)
 
+
+
 const Accounts = () => {
+  const token = localStorage.getItem('token');                   // 토큰
   // 🔽 상태 선언
   const [isModalOpen, setIsModalOpen] = useState(false);         // 모달 표시 여부
   const [transactions, setTransactions] = useState([]);          // 거래 내역 목록
@@ -23,26 +26,38 @@ const Accounts = () => {
   const [showCalendar, setShowCalendar] = useState(false);       // 연도 달력 표시 여부
   const [editId, setEditId] = useState(null);                    // 수정 대상 거래 ID (없으면 새 작성)
   const [isLoading, setIsLoading] = useState(false);             // 🔄 로딩 상태
+  const [profile, setProfile] = useState({                         // 프로필 조회
+    email: '',
+    level: 1,
+    name: '',
+  });
 
-  // 레벨/경험치 상태 (목표달성 페이지와 동일)
-  const [levelInfo, setLevelInfo] = useState({ level: 1, exp: 0, next_exp: 1, progress: 0 });
-  const userId = localStorage.getItem('user_id');
 
-  const token = localStorage.getItem('token'); // 인증 토큰 가져오기
 
-  // 레벨 정보 불러오기 (목표달성 페이지와 동일)
+  //회원조회
   useEffect(() => {
-    async function fetchLevel() {
-      if (!userId) return;
+    async function fetchProfile() {
       try {
-        const res = await axios.get(`http://localhost:5003/api/user/level?user_id=${userId}`);
-        setLevelInfo(res.data);
+        if (!token) return;
+        const res = await fetch('/api/auth/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setProfile({
+            email: data.email,
+            level: data.level,
+            name: data.name,
+          });
+        }
       } catch (e) {
-        // 무시
+        // 에러 처리 필요시 추가
       }
     }
-    fetchLevel();
-  }, [userId]);
+    fetchProfile();
+  }, []);
+  
+
 
   // 🔽 월별 거래 내역 조회 (선택 월 변경 시마다 실행)
   useEffect(() => {
@@ -226,8 +241,8 @@ const Accounts = () => {
       <div className="profile-section">
         <img src="/images/moa-fox.png" alt="MoA Fox" className="profile-image" />
         <div className="level-info">
-          <h2>Lv. {levelInfo.level}</h2>
-          <p>{localStorage.getItem('nickname')} ({localStorage.getItem('email')})</p>
+          <h2>Lv. {profile.level}</h2>
+          <p>{profile.name} ({profile.email})</p>
         </div>
       </div>
 
