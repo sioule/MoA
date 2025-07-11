@@ -4,10 +4,6 @@ import Calendar from 'react-calendar';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 
-// 🔽 API 엔드포인트 정의
-const API_BASE = 'http://localhost:5002/api/accounts';       // 월별 가계부 조회 (GET)
-const API_POST_BASE = 'http://localhost:5002/api/account';   // 가계부 생성 (POST), 수정 (PUT), 삭제 (DELETE)
-
 
 
 const Accounts = () => {
@@ -68,7 +64,7 @@ const Accounts = () => {
       setIsLoading(true);  // 🔄 로딩 시작
 
       try {
-        const res = await fetch(`${API_BASE}?year=${year}&month=${month}`, {
+        const res = await fetch(`http://localhost:5002/api/accounts?year=${year}&month=${month}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -146,7 +142,7 @@ const Accounts = () => {
     };
 
     try {
-      const url = editId ? `${API_POST_BASE}/${editId}` : API_POST_BASE;
+      const url = editId ? `http://localhost:5002/api/account/${editId}` : 'http://localhost:5002/api/account';
       const method = editId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -163,7 +159,7 @@ const Accounts = () => {
         const year = selectedDate.getFullYear();
         const month = selectedDate.getMonth() + 1;
 
-        const refreshed = await fetch(`${API_BASE}?year=${year}&month=${month}`, {
+        const refreshed = await fetch(`http://localhost:5002//api/accounts?year=${year}&month=${month}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -192,7 +188,7 @@ const Accounts = () => {
   // 🔽 삭제 API 호출
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`${API_POST_BASE}/${id}`, {
+      const res = await fetch(`http://localhost:5002/api/account/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
