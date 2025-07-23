@@ -29,7 +29,7 @@ const Goal = () => {
     async function fetchLevel() {
       if (!userId) return;
       try {
-        const res = await axios.get(`/api/user/level?user_id=${userId}`);
+        const res = await axios.get(`http://localhost:5003/api/user/level?user_id=${userId}`);
         setLevelInfo(res.data);
       } catch (e) {
         // 무시
@@ -42,7 +42,7 @@ const Goal = () => {
   const fetchGoalData = async () => {
     try {
       const response = await fetch(
-        `/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
+        `http://localhost:5003/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
       );
       const data = await response.json();
       return data;
@@ -56,7 +56,7 @@ const Goal = () => {
   const fetchObjectives = async () => {
     try {
       const response = await fetch(
-        `/api/goals/objectives/${userId}?year=${selectedYear}&month=${selectedMonth}`,
+        `http://localhost:5003/api/goals/objectives/${userId}?year=${selectedYear}&month=${selectedMonth}`,
         {
           headers: { 'Authorization': token }
         }
@@ -72,7 +72,7 @@ const Goal = () => {
   const fetchMonthlyGoals = async () => {
     try {
       const response = await fetch(
-        `/api/goals/monthly-list?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
+        `http://localhost:5003/api/goals/monthly-list?user_id=${userId}&year=${selectedYear}&month=${selectedMonth}`
       );
       const data = await response.json();
       setMonthlyGoals(data);
@@ -117,7 +117,7 @@ const Goal = () => {
       return;
     }
     try {
-      const response = await fetch('/api/goals/monthly', {
+      const response = await fetch('http://localhost:5003/api/goals/monthly', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ const Goal = () => {
     const validObjectives = objectiveInputs.filter(obj => obj.trim() !== '');
     if (validObjectives.length === 0) return;
     try {
-      const response = await fetch('/api/goals/objectives', {
+      const response = await fetch('http://localhost:5003/api/goals/objectives', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

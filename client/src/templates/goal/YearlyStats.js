@@ -14,7 +14,7 @@ const YearlyStats = () => {
       setIsLoading(true);
       try {
         // 월별 목표금액
-        const goalsRes = await fetch(`/api/goals/yearly?user_id=${userId}&year=${selectedYear}`);
+        const goalsRes = await fetch(`http://localhost:5003/api/goals/yearly?user_id=${userId}&year=${selectedYear}`);
         const goalsData = await goalsRes.json(); // [{month: 1, budget: 100000}, ...]
         // 각 월별 사용금액을 summary API로 개별 조회
         const stats = {};
@@ -22,7 +22,7 @@ const YearlyStats = () => {
           const goal = goalsData.find(g => g.month === i) || {};
           let used = 0;
           try {
-            const spentRes = await fetch(`/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${i}`);
+            const spentRes = await fetch(`http://localhost:5003/api/goals/summary?user_id=${userId}&year=${selectedYear}&month=${i}`);
             const spentData = await spentRes.json();
             used = spentData.total_spent || 0;
           } catch (e) {
