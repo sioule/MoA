@@ -11,7 +11,8 @@ from goalService import (
     get_monthly_goals_logic,
     save_objectives_logic,
     get_objectives_logic,
-    get_yearly_goals_logic
+    get_yearly_goals_logic,
+    create_monthly_goal_logic
 )
 
 # .env 파일 명시적으로 로드 (server/.env)
@@ -467,8 +468,13 @@ def get_goal_progress(goal_id):
 @app.route('/api/goals/monthly', methods=['POST'])
 def create_monthly_goal():
     try:
+        token = request.headers.get('Authorization')
+        user_id = verify_token(token)
+        if not user_id:
+            return jsonify({'error': 'Authentication required.'}), 401
+        
         data = request.get_json()
-        result, status = create_monthly_goal_logic(data)
+        result, status = create_monthly_goal_logic(user_id, data)
         return jsonify(result), status
     except Exception:
         raise
