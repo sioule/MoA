@@ -474,7 +474,8 @@ def create_monthly_goal():
             return jsonify({'error': 'Authentication required.'}), 401
         
         data = request.get_json()
-        result, status = create_monthly_goal_logic(user_id, data)
+        data['user_id'] = user_id  # user_id를 data에 추가
+        result, status = create_monthly_goal_logic(data)
         return jsonify(result), status
     except Exception:
         raise
