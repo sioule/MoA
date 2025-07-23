@@ -47,24 +47,35 @@ def create_monthly_goal_logic(data):
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    # 기존 목표 확인
     cursor.execute(
         'SELECT id FROM Goal WHERE user_id=%s AND year=%s AND month=%s',
         (user_id, year, month)
     )
-    if cursor.fetchone():
-        cursor.close()
-        conn.close()
-        return {'error': '이미 해당 달에 목표가 존재합니다.'}, 400
-
-    cursor.execute(
-        'INSERT INTO Goal (user_id, year, month, budget, objective) VALUES (%s, %s, %s, %s, %s)',
-        (user_id, year, month, budget, objective)
-    )
+    existing_goal = cursor.fetchone()
+    
+    if existing_goal:
+        # 기존 목표가 있으면 UPDATE
+        cursor.execute(
+            'UPDATE Goal SET budget=%s, objective=%s WHERE user_id=%s AND year=%s AND month=%s',
+            (budget, objective, user_id, year, month)
+        )
+        goal_id = existing_goal[0]
+        message = '목표가 수정되었습니다.'
+    else:
+        # 기존 목표가 없으면 INSERT
+        cursor.execute(
+            'INSERT INTO Goal (user_id, year, month, budget, objective) VALUES (%s, %s, %s, %s, %s)',
+            (user_id, year, month, budget, objective)
+        )
+        goal_id = cursor.lastrowid
+        message = '목표가 생성되었습니다.'
+    
     conn.commit()
-    goal_id = cursor.lastrowid
     cursor.close()
     conn.close()
-    return {'goal_id': goal_id}, 201
+    return {'message': message, 'goal_id': goal_id}, 201
 
 def get_monthly_goals_logic(user_id, year, month):
     if not all([user_id, year, month]):
